@@ -44,10 +44,12 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
                 for cmd in bash_cmds:
                     # bash does not yet know which repo and where
                     Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
-                print(f"\n{success_msg}\n")
+                input(f"\n{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             except: # handle failed bash command
-                input(f"\n{GUIMenu.RED}{err_msg}{GUIMenu.RESET} Press enter to continue.\n")
-                GUIMenu.clear_screen()
+                input(f"\n{Terminal.Text.RED}{err_msg}{Terminal.Text.RESET} Press enter to continue.\n")
+            
+            local_repo_menu.exit()
+
         # add option to the menu for the cloned repo
         local_repo_menu.add_option(local_repo, handle_bash_cmd)
     

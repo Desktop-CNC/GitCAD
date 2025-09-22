@@ -34,7 +34,6 @@ class GUIMenu:
         Ends running the menu and exits from it.
         """
         self.run_flag = False
-        Terminal.Screen.clear_screen()
 
     def run(self):
         """
@@ -85,5 +84,7 @@ class GUIMenu:
                 for line in gui:
                     Terminal.Screen.move_cursor_relatively(-1,0)
                     Terminal.Screen.clear_line()
+        
+        Terminal.Screen.clear_screen()
         # returns the menu options selected at runtime
         return selected_option_history   
