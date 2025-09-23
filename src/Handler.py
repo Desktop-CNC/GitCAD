@@ -11,7 +11,7 @@ def handle_github_current_working_directory():
     cwd.mkdir(parents=True, exist_ok=True)
     return str(cwd)
 
-def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, terminal_option_name: str=None, subtitle_text: str=None):
+def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, subtitle_text: str=None):
     """
     Handles creating a menu listing local repositories as options.
     param: cwd [str] The GitHub current working directory
@@ -19,7 +19,6 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
     param: bash_cmds [list] The list of bash commands to run
     param: success_msg [str] The message to print if bash succeeds
     param: err_msg [str] The message to print if bash fails
-    param: terminal_option_name [str] Optional override name to give to the option that exits the menu; by default this is <GO BACK>
     param: subtitle_text [str] Optional subtitle text
     """
     root_dir = path(cwd) # the root of locally cloned repos from the cwd
@@ -50,15 +49,14 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
                 input(f"\n{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             except: # handle failed bash command
                 input(f"\n{Terminal.Text.RED}{err_msg}{Terminal.Text.RESET} Press enter to continue.\n")
-            
+            # exit menu after done with bash
             local_repo_menu.exit()
-
 
         # add option to the menu for the cloned repo
         local_repo_menu.add_option(local_repo, handle_bash_cmd)
     
     # add final option to the menu to exit
-    local_repo_menu.add_option("<GO BACK>" if terminal_option_name is None else terminal_option_name, handle_go_back)
+    local_repo_menu.add_option("<GO BACK>", handle_go_back)
     # run menu and return its options that were selected
     return local_repo_menu.run() 
    
