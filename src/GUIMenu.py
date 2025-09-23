@@ -8,7 +8,7 @@ class GUIMenu:
     This menu appears in the command line. 
     """
     MENU_ORIGIN = (4,2)
-    MENU_WIDTH = 60
+    MENU_WIDTH = 80
     MENU_PADDING = 2
     MENU_ARROW = "➤"
 
@@ -71,7 +71,8 @@ class GUIMenu:
         self.run_flag = True # set run state 
         # input from the keyboard
         user_input = None
-        selected_option_history = []
+        # the last option selected from the menu
+        option_selected = None
         
         # separator bar
         separator = "=" * GUIMenu.MENU_WIDTH
@@ -86,6 +87,7 @@ class GUIMenu:
                 self.print_line(line=f"{Terminal.Text.BLUE}{Terminal.Text.BOLD}{self.title_text}{Terminal.Text.END}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0], right_offset=13)
                 self.print_line(line=f"{Terminal.Text.CYAN}{self.subtitle_text}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0], right_offset=0)
                 self.print_line(line=separator, padding=0, margin=GUIMenu.MENU_ORIGIN[0])
+                
             # convert the prompt options names/texts into a list to print to the menu screen
             gui = [f"{Terminal.Text.BOLD if i == self.arrow_index else ''}{GUIMenu.MENU_ARROW + (' ' * 4) if i == self.arrow_index else (' ' * 2)} {self.prompts[i][0]}{Terminal.Text.END}" for i in range(0, len(self.prompts))]
             for line in gui:
@@ -112,7 +114,7 @@ class GUIMenu:
                         # call args to get content
                         self.prompts[self.arrow_index][1](args())
                     # append choice to history of options selected
-                    selected_option_history.append(self.prompts[self.arrow_index][0])
+                    option_selected = self.prompts[self.arrow_index][0]
                     # put select/cursor arrow to the top of the menu
                     self.arrow_index = 0
                     break
@@ -126,4 +128,4 @@ class GUIMenu:
                 
         Terminal.Screen.clear_screen()
         # returns the menu options selected at runtime
-        return selected_option_history   
+        return option_selected

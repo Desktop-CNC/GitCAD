@@ -13,6 +13,8 @@ def handle_clone_repository(cwd: str):
     repo_url = input("Please input the GitHub Repository URL: ")
     try: # attempt to clone
         Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=cwd)
+        # import submodule/dependencies with cloned repo
+        Terminal.run_bash_cmd(["git", "submodule", "--init", "--recursive"], cwd=cwd)
         print("\nRepository successfully cloned.\n")
     except: # handle failed cloning
         input(f"\n{Terminal.Text.RED}Failed to clone the repository.{Terminal.Text.RESET} Press enter to continue.")
@@ -30,7 +32,8 @@ def handle_pull_repository(cwd: str):
         bash_cmds=[
             ["git", "stash"],
             ["git", "fetch", "origin"],
-            ["git", "reset", "--hard", "origin/main"]],
+            ["git", "reset", "--hard", "origin/main"],
+            ["git", "submodule", "update", "--init", "--recursive"]],
         success_msg="Successfully pulled the repository.",
         err_msg="Failed to pull the repository."
     )
@@ -52,18 +55,70 @@ def handle_push_repository(cwd: str):
         err_msg="Did not push changes. It's possible there are no changes to push."
     )    
 
-def handle_add_dependency(cwd: str):
+def handle_create_dependency(cwd: str):
     """
-    Adds a dependency repository to a parent repository. 
+    Create a new dependency between a repository and a parent repository. 
     param: cwd [str] The GitHub current working directory
     """
-    pass
+    # get the parent repo from a menu
+    parent_repo = Handler.handle_repository_menu(
+        cwd=cwd,
+        menu_title="Here are your local repos.",
+        subtitle_text="Select the one you wand to create a dependency for.",
+        bash_cmds=[],
+        success_msg="",
+        err_msg="",
+        pause_prompt=False
+    )
+    # get the dependency repo from another menu
+    dep_repo = Handler.handle_repository_menu(
+        cwd=cwd,
+        menu_title="Here are your local repos.",
+        subtitle_text="Select the dependency.",
+        bash_cmds=[],
+        success_msg="",
+        err_msg="",
+        pause_prompt=False,
+        ignore_repos=[parent_repo]
+    )
 
-def handle_remove_dependency(cwd: str):
-    pass
+    try:
+        # get repo directories 
+        parent_repo_dir = cwd + "/" + parent_repo
+        dep_repo_dir = cwd + "/" + dep_repo
+        # get dependency repo url from bash
+        dep_repo_ssh_url = Terminal.run_bash_cmd(["git", "remote", "get-url", "origin"], cwd=dep_repo_dir).stdout.strip()
 
-def handle_refresh_dependencies(cwd: str):
-    pass
+        # add dependency repo by its url and push parent repo to github
+        Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"dep/{dep_repo}"], cwd=parent_repo_dir)
+        Terminal.run_bash_cmd(["git", "commit", "-am", f"Created {dep_repo} as a submodule/dependency to {parent_repo}"], cwd=parent_repo_dir)
+        Terminal.run_bash_cmd(["git", "push"], cwd=parent_repo_dir)
+        input(f"\n{Terminal.Text.GREEN}{"Successfully created dependency and pushed it to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
+    except:
+        input(f"\n{Terminal.Text.RED}{"Failed to create dependency. It may already exist, or a chosen repository does not."}{Terminal.Text.RESET} Press enter to continue.\n")
+
+def handle_delete_dependency(cwd: str):
+    """
+    Removes a dependency from 
+    """
+
+def handle_update_to_latest_dependencies(cwd: str):
+    """
+    Refreshes the dependencies attached to a repository by pulling updated dependency content from GitHub. 
+    """
+    Handler.handle_repository_menu(
+        cwd=cwd,
+        menu_title="Here are your local repositories.",
+        subtitle_text="Select which to update its dependencies. The update will be pushed to GitHub",
+        bash_cmds=[
+            ["git", "submodule", "update", "--remote"],
+            ["git", "add", "dep/*"],
+            ["git", "commit", "-m", "Updated submodules/dependencies"],
+            ["git", "push"]
+        ],
+        success_msg="Dependencies successfully updated and then pushed to GitHub.",
+        err_msg="Failed to update dependencies. It could be that they're already up to date." 
+    )
 
 def handle_exit():
     print("\n exiting program...")
@@ -73,11 +128,11 @@ def main():
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Pull repository changes from GitHub", handle_pull_repository, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Pull latest repository changes from GitHub", handle_pull_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Push repository changes back to GitHub", handle_push_repository, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Add a dependency", handle_add_dependency, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Remove a dependency", handle_remove_dependency, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Refresh dependencies", handle_refresh_dependencies, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Create a new dependency", handle_create_dependency, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Delete a dependency", handle_delete_dependency, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Set dependencies to their latest versions available", handle_update_to_latest_dependencies, Handler.handle_github_current_working_directory)
     main_menu.add_option("<EXIT>", handle_exit)
     # run the main menu
     main_menu.run()
