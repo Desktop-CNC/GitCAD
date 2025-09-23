@@ -1,0 +1,3 @@
+[submodule "dep/RhoBetaEpsilon_Papesh25"]
+	path = dep/RhoBetaEpsilon_Papesh25
+	url = git@github.com:Matthew-Papesh/RhoBetaEpsilon_Papesh25.git
