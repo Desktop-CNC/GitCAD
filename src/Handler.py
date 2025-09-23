@@ -1,6 +1,7 @@
 from pathlib import Path as path
 from GUIMenu import GUIMenu
 import Terminal
+import copy
 
 def handle_github_current_working_directory():
     """
@@ -10,7 +11,7 @@ def handle_github_current_working_directory():
     cwd.mkdir(parents=True, exist_ok=True)
     return str(cwd)
 
-def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, terminal_option_name: str=None):
+def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, terminal_option_name: str=None, subtitle_text: str=None):
     """
     Handles creating a menu listing local repositories as options.
     param: cwd [str] The GitHub current working directory
@@ -19,9 +20,10 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
     param: success_msg [str] The message to print if bash succeeds
     param: err_msg [str] The message to print if bash fails
     param: terminal_option_name [str] Optional override name to give to the option that exits the menu; by default this is <GO BACK>
+    param: subtitle_text [str] Optional subtitle text
     """
     root_dir = path(cwd) # the root of locally cloned repos from the cwd
-    local_repo_menu = GUIMenu(title_text=menu_title) # create the menu
+    local_repo_menu = GUIMenu(title_text=menu_title, subtitle_text=subtitle_text) # create the menu
 
     def handle_go_back():
         """
@@ -35,12 +37,13 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
             continue # ignore what's in the root dir that isn't a dir
         # get the name of a cloned repo
         local_repo = item.name
-        def handle_bash_cmd():
+        repo_dir = cwd / path(local_repo)
+
+        def handle_bash_cmd(repo_dir=repo_dir):
             """
             Handles the bash command for for the local repo.
             """
             try: # attempt to run bash with the repo dir
-                repo_dir = cwd + "/" + local_repo
                 for cmd in bash_cmds:
                     # bash does not yet know which repo and where
                     Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
@@ -49,6 +52,7 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
                 input(f"\n{Terminal.Text.RED}{err_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             
             local_repo_menu.exit()
+
 
         # add option to the menu for the cloned repo
         local_repo_menu.add_option(local_repo, handle_bash_cmd)

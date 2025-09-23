@@ -25,7 +25,8 @@ def handle_pull_repository(cwd: str):
     """
     Handler.handle_repository_menu(
         cwd=cwd, 
-        menu_title="Here are your local repos. \nSelect the one you want to pull changes from GitHub for.", 
+        menu_title="Here are your local repos.",
+        subtitle_text="Select the one you want to pull changes from GitHub for.", 
         bash_cmds=[
             ["git", "stash"],
             ["git", "fetch", "origin"],
@@ -34,7 +35,6 @@ def handle_pull_repository(cwd: str):
         err_msg="Failed to pull the repository."
     )
 
-
 def handle_push_repository(cwd: str):
     """
     Handles pushing a local repository back to GitHub. This is for the main menu.
@@ -42,7 +42,8 @@ def handle_push_repository(cwd: str):
     """
     Handler.handle_repository_menu(
         cwd=cwd, 
-        menu_title="Here are your local repos. \nSelect the one you want to push changes back to GitHub for.",
+        menu_title="Here are your local repos.",
+        subtitle_text="Select the one you want to push changes back to GitHub for.",
         bash_cmds=[
             ["git", "add", "."],
             ["git", "commit", "-m", input("What changes were made? Press enter when done, but type here: ")],
@@ -70,7 +71,7 @@ def handle_exit():
 
 def main():
     # create the main menu
-    main_menu = GUIMenu(title_text="Welcome to GitCAD. \nWhat would you like to do? Use arrow keys to navigate.")
+    main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Pull repository changes from GitHub", handle_pull_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Push repository changes back to GitHub", handle_push_repository, Handler.handle_github_current_working_directory)
