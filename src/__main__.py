@@ -8,9 +8,10 @@ def handle_clone_repository(cwd: str):
     param: cwd [str] The repository current working directory
     """
     # prompt the repo cloning
-    print("\nWelcome to GitHub CAD Helper\n.")
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
+    print(f"\n{margin}Lets clone from GitHub.\n")
     # get online GitHub repo URL
-    repo_url = input("Please input the GitHub Repository URL: ")
+    repo_url = input(f"{margin}Please input the GitHub Repository URL: ")
     try: # attempt to clone
         Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=cwd)
         # import submodule/dependencies with cloned repo
@@ -43,13 +44,14 @@ def handle_push_repository(cwd: str):
     Handles pushing a local repository back to GitHub. This is for the main menu.
     param: cwd [str] The GitHub current working directory
     """
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
     Handler.handle_repository_menu(
         cwd=cwd, 
         menu_title="Here are your local repos.",
         subtitle_text="Select the one you want to push changes back to GitHub for.",
         bash_cmds=[
             ["git", "add", "."],
-            ["git", "commit", "-m", input("What changes were made? Press enter when done, but type here: ")],
+            ["git", "commit", "-m", input(f"\n{margin}What changes were made? Press enter when done, but type here: ")],
             ["git", "push"]],
         success_msg="Successfully pushed the repository",
         err_msg="Did not push changes. It's possible there are no changes to push."
@@ -99,8 +101,36 @@ def handle_create_dependency(cwd: str):
 
 def handle_delete_dependency(cwd: str):
     """
-    Removes a dependency from 
+    Removes a dependency from a repository.
+    param: cwd [str] The GitHub current working directory
     """
+    Handler.handle_repository_menu(
+        cwd=cwd,
+        menu_title="Here are your local repositories.",
+        subtitle_text="Select which to delete a dependency from.",
+        bash_cmds=[
+            
+        ],
+        success_msg="Successfully deleted dependency and pushed the change to GitHub.",
+        err_msg="Failed to delete dependency."
+    )
+
+def handle_sync_dependencies(cwd: str):
+    """
+    Syncs dependencies to the current versions tagged and available for a repository.
+    param: cwd [str] The GitHub current working directory
+    """
+    Handler.handle_repository_menu(
+        cwd=cwd,
+        menu_title="Here are your local repositories. Syncing completely resets dependencies!",
+        subtitle_text="Select which to sync to current dependency versions on GitHub",
+        bash_cmds=[
+
+        ],
+        success_msg="Successfully synced dependencies with versions on GitHub.",
+        err_msg="Failed to sync dependencies."
+    )
+
 
 def handle_update_to_latest_dependencies(cwd: str):
     """
@@ -124,7 +154,7 @@ def handle_exit():
     print("\n exiting program...")
     exit(0)
 
-def main():
+def __main__():
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
@@ -132,11 +162,12 @@ def main():
     main_menu.add_option("Push repository changes back to GitHub", handle_push_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Create a new dependency", handle_create_dependency, Handler.handle_github_current_working_directory)
     main_menu.add_option("Delete a dependency", handle_delete_dependency, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Set dependencies to their latest versions available", handle_update_to_latest_dependencies, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Sync dependencies to the set current versions", handle_sync_dependencies, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Set dependencies latest versions available", handle_update_to_latest_dependencies, Handler.handle_github_current_working_directory)
     main_menu.add_option("<EXIT>", handle_exit)
     # run the main menu
     main_menu.run()
 
 # run the program
 if __name__ == "__main__":
-    main()
+    __main__()
