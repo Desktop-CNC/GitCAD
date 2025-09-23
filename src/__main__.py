@@ -15,7 +15,9 @@ def handle_clone_repository(cwd: str):
     try: # attempt to clone
         Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=cwd)
         # import submodule/dependencies with cloned repo
-        Terminal.run_bash_cmd(["git", "submodule", "--init", "--recursive"], cwd=cwd)
+        repo_name = repo_url.split(sep="/").pop().replace(".git", "")
+        repo_dir = cwd + "/" + repo_name # repo directory after cloning
+        Terminal.run_bash_cmd(["git", "submodule", "update", "--init", "--recursive"], cwd=repo_dir)
         print("\nRepository successfully cloned.\n")
     except: # handle failed cloning
         input(f"\n{Terminal.Text.RED}Failed to clone the repository.{Terminal.Text.RESET} Press enter to continue.")
@@ -104,16 +106,45 @@ def handle_delete_dependency(cwd: str):
     Removes a dependency from a repository.
     param: cwd [str] The GitHub current working directory
     """
-    Handler.handle_repository_menu(
+    # get parent from repo menu
+    parent_repo = Handler.handle_repository_menu(
         cwd=cwd,
-        menu_title="Here are your local repositories.",
+        menu_title="Here are your local repos.",
         subtitle_text="Select which to delete a dependency from.",
-        bash_cmds=[
-            
-        ],
-        success_msg="Successfully deleted dependency and pushed the change to GitHub.",
-        err_msg="Failed to delete dependency."
+        bash_cmds=[],
+        success_msg="",
+        err_msg="",
+        pause_prompt=False
     )
+    # get dependency repo from another menu
+    dep_repo = Handler.handle_repository_menu(
+        cwd=cwd, 
+        menu_title="Here are your local repos.", 
+        subtitle_text="Select the dependency to delete.",
+        bash_cmds=[],
+        success_msg="",
+        err_msg="",
+        pause_prompt=False,
+        ignore_repos=[parent_repo]
+    )
+
+    try:
+        # get parent repo directory 
+        parent_repo_dir = cwd + "/" + parent_repo
+        # run dependency removal bash
+        # remove submodule tracking
+        Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"dep/{dep_repo}"], cwd=parent_repo_dir)
+        Terminal.run_bash_cmd(["git", "rm", "-f", f"dep/{dep_repo}"], cwd=parent_repo_dir)
+        # clean up metadata left over
+        Terminal.run_bash_cmd(["rm", "-rf", f".git/modules/dep/{dep_repo}"], cwd=parent_repo_dir)
+        Terminal.run_bash_cmd(["rm", "-rf", f"dep/{dep_repo}"], cwd=parent_repo_dir)
+
+        Terminal.run_bash_cmd(["git", "commit", "-m", f"Deleted submodule/dependency {dep_repo} from {parent_repo}"], cwd=parent_repo_dir)
+        Terminal.run_bash_cmd(["git", "push"], cwd=parent_repo_dir)
+        input(f"\n{Terminal.Text.GREEN}{"Successfully deleted dependency and pushed change to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
+    except:
+        input(f"\n{Terminal.Text.RED}{"Failed to delete dependency. It may not exist, or already deleted."}{Terminal.Text.RESET} Press enter to continue.\n")
+
 
 def handle_sync_dependencies(cwd: str):
     """
@@ -122,15 +153,16 @@ def handle_sync_dependencies(cwd: str):
     """
     Handler.handle_repository_menu(
         cwd=cwd,
-        menu_title="Here are your local repositories. Syncing completely resets dependencies!",
+        menu_title="Here are your local repos. Syncing completely resets dependencies!",
         subtitle_text="Select which to sync to current dependency versions on GitHub",
         bash_cmds=[
-
+            ["git", "fetch", "origin"],
+            ["git", "submodule", "update", "--init", "--recursive"],
+            ["git", "submodule", "foreach", "git reset --hard"]
         ],
         success_msg="Successfully synced dependencies with versions on GitHub.",
         err_msg="Failed to sync dependencies."
     )
-
 
 def handle_update_to_latest_dependencies(cwd: str):
     """
