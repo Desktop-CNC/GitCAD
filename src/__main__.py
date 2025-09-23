@@ -11,16 +11,16 @@ def handle_clone_repository(cwd: str):
     margin = " " * GUIMenu.MENU_ORIGIN[0]
     print(f"\n{margin}Lets clone from GitHub.\n")
     # get online GitHub repo URL
-    repo_url = input(f"{margin}Please input the GitHub Repository URL: ")
+    repo_url = input(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}Please input the GitHub Repository URL: {Terminal.Text.RESET}")
     try: # attempt to clone
         Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=cwd)
         # import submodule/dependencies with cloned repo
         repo_name = repo_url.split(sep="/").pop().replace(".git", "")
         repo_dir = cwd + "/" + repo_name # repo directory after cloning
         Terminal.run_bash_cmd(["git", "submodule", "update", "--init", "--recursive"], cwd=repo_dir)
-        print("\nRepository successfully cloned.\n")
+        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.GREEN}Repository successfully cloned.{Terminal.Text.RESET}\n")
     except: # handle failed cloning
-        input(f"\n{Terminal.Text.RED}Failed to clone the repository.{Terminal.Text.RESET} Press enter to continue.")
+        input(f"\n{Terminal.Text.BOLD}{Terminal.Text.RED}Failed to clone the repository.{Terminal.Text.RESET} Press enter to continue.")
         Terminal.Screen.clear_screen()
 
 def handle_pull_repository(cwd: str):
@@ -53,7 +53,7 @@ def handle_push_repository(cwd: str):
         subtitle_text="Select the one you want to push changes back to GitHub for.",
         bash_cmds=[
             ["git", "add", "."],
-            ["git", "commit", "-m", input(f"\n{margin}What changes were made? Press enter when done, but type here: ")],
+            ["git", "commit", "-m", input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.BLUE}What changes were made? {Terminal.Text.CYAN}Press enter when done, but type here: {Terminal.Text.RESET}")],
             ["git", "push"]],
         success_msg="Successfully pushed the repository",
         err_msg="Did not push changes. It's possible there are no changes to push."

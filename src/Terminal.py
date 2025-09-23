@@ -49,11 +49,13 @@ class Text:
     # text formatting 
     BOLD = '\033[1m'
     END = '\033[0m'
+    GREY = '\033[37m'
     RED = '\033[31m'
     GREEN = '\033[32m'
     BLUE = '\033[34m'
     CYAN = '\033[36m'
-    YELLOW = '\033[33m'
+    YELLOW = '\033[93m'
+    UNDERLINE = "\x1B[4m"
     RESET = '\033[0m' # Resets to default color and style
     def __init__(self):
         pass
@@ -64,6 +66,5 @@ def run_bash_cmd(cmd: list, cwd:str=None):
     param: cmd [list] The command to run
     param: cwd [str] Optional current working directory
     """
-    print(f"CWD: {cwd} with cmd: {cmd}")
     result = subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True)
     return result

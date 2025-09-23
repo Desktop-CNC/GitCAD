@@ -40,19 +40,25 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
         local_repo = item.name
         repo_dir = cwd / path(local_repo)
 
-        def handle_bash_cmd(repo_dir=repo_dir):
+        def handle_bash_cmd(repo_name=local_repo, repo_dir=repo_dir):
             """
             Handles the bash command for for the local repo.
             """
+            margin = " " * GUIMenu.MENU_ORIGIN[0]
+            print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.UNDERLINE}Running commands:{Terminal.Text.RESET}")
             try: # attempt to run bash with the repo dir
                 for cmd in bash_cmds:
                     # bash does not yet know which repo and where
-                    Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
+                    cmd_output = Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
+                    # get inline command as a string
+                    cmd_str = " ".join(cmd_output.args)
+                    # print commands printed from the current working directory 
+                    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}/{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
                 if pause_prompt:
-                    input(f"\n{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
+                    input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             except: # handle failed bash command
                 if pause_prompt:
-                    input(f"\n{Terminal.Text.RED}{err_msg}{Terminal.Text.RESET} Press enter to continue.\n")
+                    input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.RED}{err_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             # exit menu after done with bash
             local_repo_menu.exit()
 
