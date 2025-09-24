@@ -1,7 +1,20 @@
 from pathlib import Path as path
+import sys
 from GUIMenu import GUIMenu
 import Terminal
-import copy
+
+def slash():
+    """
+    Returns the slash notation of the operating system.
+    """
+    if sys.platform.startswith("win"):
+        return "\\"
+    elif sys.platform.startswith("linux"):
+        return "/"
+    elif sys.platform.startswith("darwin"):
+        return "/"
+    return None
+
 
 def handle_github_current_working_directory():
     """
@@ -9,9 +22,9 @@ def handle_github_current_working_directory():
     """
     cwd = path.home() / "Documents" / "GitHub"
     cwd.mkdir(parents=True, exist_ok=True)
-    return str(cwd)
+    return cwd
 
-def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None):
+def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None):
     """
     Handles creating a menu listing local repositories as options.
     param: cwd [str] The GitHub current working directory
@@ -23,7 +36,7 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
     param: subtitle_text [str] Optional subtitle text
     param: ignore_repos [list] Optional list of repos to not show on the menu
     """
-    root_dir = path(cwd) # the root of locally cloned repos from the cwd
+    root_dir = cwd # the root of locally cloned repos from the cwd
     local_repo_menu = GUIMenu(title_text=menu_title, subtitle_text=subtitle_text) # create the menu
 
     def handle_go_back():
@@ -53,7 +66,7 @@ def handle_repository_menu(cwd: str, menu_title: str, bash_cmds: list, success_m
                     # get inline command as a string
                     cmd_str = " ".join(cmd_output.args)
                     # print commands printed from the current working directory 
-                    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}/{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
+                    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
                 if pause_prompt:
                     input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             except: # handle failed bash command
