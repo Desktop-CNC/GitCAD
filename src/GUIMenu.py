@@ -44,6 +44,7 @@ class GUIMenu:
         param: left_offset [int] Optional extra whitespace offset to the left of the content
         param: right_offset [int] Optional extra whitespace offset to the right of the content
         """
+        left_offset, right_offset = 0,0
         # convert to concatenated whitespace 
         padding = " " * padding
         margin = " " * margin
@@ -51,7 +52,7 @@ class GUIMenu:
         right_offset = "" if right_offset is None else " " * max(0, right_offset)
 
         # insert text into fixed length line
-        line = line.ljust(GUIMenu.MENU_WIDTH) 
+        line = line.ljust(GUIMenu.MENU_WIDTH,"+") 
         if line.__contains__(GUIMenu.MENU_ARROW):
             line = line + (" " * 4)
         # add borders and print

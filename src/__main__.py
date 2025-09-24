@@ -194,9 +194,9 @@ def __main__():
     main_menu.add_option("Push repository changes back to GitHub", handle_push_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Create a new dependency", handle_create_dependency, Handler.handle_github_current_working_directory)
     main_menu.add_option("Delete a dependency", handle_delete_dependency, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Sync dependencies to the set current versions", handle_sync_dependencies, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Reset dependencies to the current versions", handle_sync_dependencies, Handler.handle_github_current_working_directory)
     main_menu.add_option("Set dependencies latest versions available", handle_update_to_latest_dependencies, Handler.handle_github_current_working_directory)
-    main_menu.add_option("<EXIT>", handle_exit)
+    main_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the main menu
     main_menu.run()
 
