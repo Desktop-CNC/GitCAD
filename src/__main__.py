@@ -163,8 +163,9 @@ def handle_sync_dependencies(cwd: str):
         bash_cmds=[
             ["git", "fetch", "origin"],
             ["git", "submodule", "update", "--init", "--recursive"],
-            ["git", "submodule", "foreach", "git reset --hard"]
+            ["git", "submodule", "foreach", "--recursive", "git reset --hard"]
         ],
+        
         success_msg="Successfully synced dependencies with versions on GitHub.",
         err_msg="Failed to sync dependencies."
     )
