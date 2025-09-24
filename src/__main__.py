@@ -18,10 +18,11 @@ def handle_clone_repository(cwd: str):
         repo_name = repo_url.split(sep="/").pop().replace(".git", "")
         repo_dir = cwd + "/" + repo_name # repo directory after cloning
         Terminal.run_bash_cmd(["git", "submodule", "update", "--init", "--recursive"], cwd=repo_dir)
-        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.GREEN}Repository successfully cloned.{Terminal.Text.RESET}\n")
+        input(f"\n{Terminal.Text.BOLD}{Terminal.Text.GREEN}Repository successfully cloned.{Terminal.Text.RESET} Press enter to continue.")
     except: # handle failed cloning
         input(f"\n{Terminal.Text.BOLD}{Terminal.Text.RED}Failed to clone the repository.{Terminal.Text.RESET} Press enter to continue.")
-        Terminal.Screen.clear_screen()
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_pull_repository(cwd: str):
     """
@@ -100,6 +101,8 @@ def handle_create_dependency(cwd: str):
         input(f"\n{Terminal.Text.GREEN}{"Successfully created dependency and pushed it to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
     except:
         input(f"\n{Terminal.Text.RED}{"Failed to create dependency. It may already exist, or a chosen repository does not."}{Terminal.Text.RESET} Press enter to continue.\n")
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_delete_dependency(cwd: str):
     """
@@ -144,7 +147,8 @@ def handle_delete_dependency(cwd: str):
         input(f"\n{Terminal.Text.GREEN}{"Successfully deleted dependency and pushed change to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
     except:
         input(f"\n{Terminal.Text.RED}{"Failed to delete dependency. It may not exist, or already deleted."}{Terminal.Text.RESET} Press enter to continue.\n")
-
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_sync_dependencies(cwd: str):
     """

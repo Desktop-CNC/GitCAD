@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import readchar
+import re
 import Terminal
 
 class GUIMenu:
@@ -8,7 +9,7 @@ class GUIMenu:
     This menu appears in the command line. 
     """
     MENU_ORIGIN = (4,2)
-    MENU_WIDTH = 80
+    MENU_WIDTH = 70
     MENU_PADDING = 2
     MENU_ARROW = "➤"
 
@@ -35,29 +36,28 @@ class GUIMenu:
         """
         self.prompts.append((option_text, handler, arg_supplier_handler))
 
-    def print_line(self, line: str, padding: int, margin: int, left_offset: int=None, right_offset: int=None):
+    def print_line(self, line: str, padding: int, margin: int, content_width: int=MENU_WIDTH):
         """
         Prints a formatted line of the GUI menu.
         param: line [str] The text to format
-        param: padding [int] The amount of whitespace padding before borders
-        param: margin [int] The amount of whitespace after borders 
-        param: left_offset [int] Optional extra whitespace offset to the left of the content
-        param: right_offset [int] Optional extra whitespace offset to the right of the content
+        param: padding [int] The amount of whitespace padding inside borders
+        param: margin [int] The amount of whitespace outside borders
+        param: content_width [int] Width of the main text area (default 80)
         """
-        left_offset, right_offset = 0,0
-        # convert to concatenated whitespace 
-        padding = " " * padding
-        margin = " " * margin
-        left_offset = "" if left_offset is None else " " * max(0, left_offset)
-        right_offset = "" if right_offset is None else " " * max(0, right_offset)
+        # padding and margin spaces
+        padding_str = " " * padding
+        margin_str = " " * margin
+        # insert padding into content
+        content = f"{padding_str}{line}{padding_str}"
+        # get content len without ascii
+        actual_line_length = len(re.sub(r'\033\[[0-9;]*m', '', content))
+        whitespace = " " * (content_width - actual_line_length) # whitespace to add for ljust
 
-        # insert text into fixed length line
-        line = line.ljust(GUIMenu.MENU_WIDTH,"+") 
-        if line.__contains__(GUIMenu.MENU_ARROW):
-            line = line + (" " * 4)
-        # add borders and print
-        line = margin + "||" + left_offset + padding + line + padding + right_offset + "||" + margin
-        print(line)
+        # insert text into fixed length content area
+        content = content + whitespace
+        # add borders
+        formatted_line = f"{margin_str}||{content}||{margin_str}"
+        print(formatted_line)
 
     def exit(self):
         """
@@ -84,15 +84,23 @@ class GUIMenu:
             if user_input is None or user_input == readchar.key.ENTER: 
                 # print offset to menu origin 
                 print("\n"*GUIMenu.MENU_ORIGIN[1])
+                # print horizontal separator
                 self.print_line(line=separator, padding=0, margin=GUIMenu.MENU_ORIGIN[0])
-                self.print_line(line=f"{Terminal.Text.BLUE}{Terminal.Text.BOLD}{self.title_text}{Terminal.Text.END}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0], right_offset=13)
-                self.print_line(line=f"{Terminal.Text.CYAN}{self.subtitle_text}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0], right_offset=0)
+                # print title and subtitle
+                self.print_line(line=f"{Terminal.Text.BLUE}{Terminal.Text.BOLD}{self.title_text}{Terminal.Text.END}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0])
+                self.print_line(line=f"{Terminal.Text.CYAN}{self.subtitle_text}{Terminal.Text.RESET}", padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0])
+                # print horizontal separator
                 self.print_line(line=separator, padding=0, margin=GUIMenu.MENU_ORIGIN[0])
                 
             # convert the prompt options names/texts into a list to print to the menu screen
-            gui = [f"{Terminal.Text.BOLD if i == self.arrow_index else ''}{GUIMenu.MENU_ARROW + (' ' * 4) if i == self.arrow_index else (' ' * 2)} {self.prompts[i][0]}{Terminal.Text.END}" for i in range(0, len(self.prompts))]
-            for line in gui:
-                self.print_line(line=line, padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0])
+            for i in range(0, len(self.prompts)):
+                # print rows of options
+                selector = f"{Terminal.Text.BOLD}{GUIMenu.MENU_ARROW}" if i == self.arrow_index else ""
+                selector = selector.ljust(3)
+                prompt = f"{' '*4 if i == self.arrow_index else ''}{self.prompts[i][0]}"
+                row = f"{selector}{prompt}{Terminal.Text.END}"
+                self.print_line(line=row, padding=GUIMenu.MENU_PADDING, margin=GUIMenu.MENU_ORIGIN[0])
+            # print final horizontal separator
             self.print_line(line=separator, padding=0, margin=GUIMenu.MENU_ORIGIN[0])
 
             # loop while listening for user input from the keyboard
@@ -123,7 +131,7 @@ class GUIMenu:
             # clear lines of the menu options printed if an option was not selected
             if user_input != readchar.key.ENTER:
                 Terminal.Screen.clear_line()
-                for i in range(0, len(gui)+1):
+                for i in range(0, len(self.prompts)+1):
                     Terminal.Screen.move_cursor_relatively(-1,0)
                     Terminal.Screen.clear_line()
                 
