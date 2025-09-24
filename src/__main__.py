@@ -1,7 +1,9 @@
 from GUIMenu import GUIMenu
 from pathlib import Path as path
+import subprocess
 import Terminal
 import Handler
+import os
 
 def handle_clone_repository(cwd: path):
     """
@@ -13,6 +15,7 @@ def handle_clone_repository(cwd: path):
     print(f"\n{margin}Lets clone from GitHub.\n")
     # get online GitHub repo URL
     repo_url = input(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}Please input the GitHub Repository URL: {Terminal.Text.RESET}")
+    
     try: # attempt to clone
         Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=str(cwd))
         # import submodule/dependencies with cloned repo
@@ -96,12 +99,12 @@ def handle_create_dependency(cwd: path):
         dep_repo_ssh_url = Terminal.run_bash_cmd(["git", "remote", "get-url", "origin"], cwd=str(dep_repo_dir)).stdout.strip()
 
         # add dependency repo by its url and push parent repo to github
-        Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"{path("dep") / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "commit", "-am", f"Created {dep_repo} as a submodule/dependency to {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
-        input(f"\n{Terminal.Text.GREEN}{"Successfully created dependency and pushed it to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{Terminal.Text.GREEN}Successfully created dependency and pushed it to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except:
-        input(f"\n{Terminal.Text.RED}{"Failed to create dependency. It may already exist, or a chosen repository does not."}{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{Terminal.Text.RED}Failed to create dependency. It may already exist, or a chosen repository does not.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()
 
@@ -137,17 +140,17 @@ def handle_delete_dependency(cwd: path):
         parent_repo_dir = cwd / path(parent_repo)
         # run dependency removal bash
         # remove submodule tracking
-        Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"{path("dep") / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd(["git", "rm", "-f", f"{path("dep") / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "rm", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
         # clean up metadata left over
-        Terminal.run_bash_cmd(["rm", "-rf", f"{path(".git") / path("modules") / path("dep") / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd(["rm", "-rf", f"{path("dep") / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["rm", "-rf", f"{path('.git') / path('modules') / path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["rm", "-rf", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
 
         Terminal.run_bash_cmd(["git", "commit", "-m", f"Deleted submodule/dependency {dep_repo} from {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
-        input(f"\n{Terminal.Text.GREEN}{"Successfully deleted dependency and pushed change to GitHub."}{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{Terminal.Text.GREEN}Successfully deleted dependency and pushed change to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except:
-        input(f"\n{Terminal.Text.RED}{"Failed to delete dependency. It may not exist, or already deleted."}{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{Terminal.Text.RED}Failed to delete dependency. It may not exist, or already deleted.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()
 
@@ -180,7 +183,7 @@ def handle_update_to_latest_dependencies(cwd: str):
         subtitle_text="Select which to update its dependencies. The update will be pushed to GitHub",
         bash_cmds=[
             ["git", "submodule", "update", "--remote"],
-            ["git", "add", f"{path("dep") / path("*")}"],
+            ["git", "add", f"{path('dep') / path('*')}"],
             ["git", "commit", "-m", "Updated submodules/dependencies"],
             ["git", "push"]
         ],
@@ -193,6 +196,7 @@ def handle_exit():
     exit(0)
 
 def __main__():
+
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)

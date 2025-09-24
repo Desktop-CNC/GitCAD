@@ -66,5 +66,5 @@ def run_bash_cmd(cmd: list, cwd:str=None):
     param: cmd [list] The command to run
     param: cwd [str] Optional current working directory
     """
-    result = subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True)
+    result = subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True, shell=True)
     return result
