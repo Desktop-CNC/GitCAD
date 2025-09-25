@@ -68,3 +68,11 @@ def run_bash_cmd(cmd: list, cwd:str=None):
     """
     result = subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True, shell=True)
     return result
+
+def read_file(file_name: str): 
+    try:
+        with open(file_name, "r") as file:
+            file.read()
+    except Exception as e:
+        print(f"Read File Error: {e}")
+        exit(1)
