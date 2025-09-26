@@ -98,6 +98,7 @@ def handle_create_dependency(cwd: path):
     )
     # check if the menu was exited
     if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
+        Terminal.Screen.clear_screen()
         return
     # repos that are already dependencies of the parent; ignore them below
     current_repo_deps = Handler.handle_repository_dependendencies(cwd=cwd / path(parent_repo))
@@ -156,6 +157,7 @@ def handle_delete_dependency(cwd: path):
     )
     # check if the menu was exited
     if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
+        Terminal.Screen.clear_screen()
         return
     # get repos allowed to be deleted (deps of the parent)
     allowed_repos = Handler.handle_repository_dependendencies(cwd=cwd / path(parent_repo))
