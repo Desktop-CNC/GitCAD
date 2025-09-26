@@ -35,13 +35,10 @@ def handle_repository_dependendencies(cwd: path):
         return deps
     except FileExistsError as e:
         # file doesn't exist; return empty list
-        return None
+        return []
     except Exception as e:
         # handle all other errors
-        print(f"error: {e}")
-        exit(0)
-    # otherwise return empty
-    return None
+        return []
 
 
 def handle_github_current_working_directory():
@@ -87,7 +84,10 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
         # get the name of a cloned repo
         local_repo = item.name
         repo_dir = cwd / path(local_repo)
-
+        # list of dependencies of the repo option
+        repo_deps = handle_repository_dependendencies(cwd=repo_dir)
+        row_deps = f"> {Terminal.Text.CYAN}deps: {Terminal.Text.CYAN}{repo_deps}{Terminal.Text.END}" if len(repo_deps) > 0 else ""
+        row = f"{local_repo} {row_deps}" 
         def handle_bash_cmd(repo_name=local_repo, repo_dir=repo_dir):
             """
             Handles the bash command for for the local repo.
@@ -111,7 +111,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
             local_repo_menu.exit()
 
         # add option to the menu for the cloned repo
-        local_repo_menu.add_option(local_repo, handle_bash_cmd)
+        local_repo_menu.add_option(row, handle_bash_cmd)
     
     # add final option to the menu to exit
     local_repo_menu.add_option(f"{Terminal.Text.YELLOW}<GO BACK>{Terminal.Text.END}", handle_go_back)

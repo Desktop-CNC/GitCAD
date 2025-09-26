@@ -137,4 +137,6 @@ class GUIMenu:
                 
         Terminal.Screen.clear_screen()
         # returns the menu options selected at runtime
-        return option_selected
+        if option_selected.__contains__("deps:"):
+            return option_selected.split(">")[0].strip()
+        return option_selected.strip()
