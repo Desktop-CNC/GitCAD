@@ -15,6 +15,34 @@ def slash():
         return "/"
     return None
 
+def handle_repository_dependendencies(cwd: path):
+    """
+    Gets a list of the immediate dependencies associated with a given repository. Reads from .gitmodules file.
+    param: cwd [path] Directory of the parent repository
+    """
+    try: 
+        deps = [] # list of dependencies to collect
+        file_dir = str(cwd / path(".gitmodules"))
+        with open(file_dir, "r") as file:
+            # found the file; read it
+            for line in file:
+                # find dep / submodule url line
+                if line.startswith("	url"):
+                    # look at just the dep repo url, look at the repo name and drop .git file type
+                    dep = line.split().pop().split("/").pop().replace(".git", "")
+                    deps.append(dep) # add dep
+        # found all deps; return list 
+        return deps
+    except FileExistsError as e:
+        # file doesn't exist; return empty list
+        return None
+    except Exception as e:
+        # handle all other errors
+        print(f"error: {e}")
+        exit(0)
+    # otherwise return empty
+    return None
+
 
 def handle_github_current_working_directory():
     """
@@ -24,7 +52,7 @@ def handle_github_current_working_directory():
     cwd.mkdir(parents=True, exist_ok=True)
     return cwd
 
-def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None):
+def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None, allow_repos: list=None):
     """
     Handles creating a menu listing local repositories as options.
     param: cwd [str] The GitHub current working directory
@@ -35,6 +63,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
     param: pause_prompt [bool] Optional to indicate if user should be paused and prompted with a status after running the bash commands
     param: subtitle_text [str] Optional subtitle text
     param: ignore_repos [list] Optional list of repos to not show on the menu
+    param: allow_repos [list] Optional list of repos allowed in the menu; found repos not in this list are ignored if the list is not None
     """
     root_dir = cwd # the root of locally cloned repos from the cwd
     local_repo_menu = GUIMenu(title_text=menu_title, subtitle_text=subtitle_text) # create the menu
@@ -45,10 +74,16 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
         """
         local_repo_menu.exit()
 
+    import time
     # step through the list of locally cloned repos
     for item in root_dir.iterdir():
-        if not item.is_dir() or (ignore_repos is not None and ignore_repos.__contains__(item.name)):
-            continue # ignore non-dirs or repos we don't want
+        # check if repo is in the set of ignored repos; if this set exist and contains the repo it should be ignored
+        in_ignored = ignore_repos is not None and ignore_repos.__contains__(item.name)
+        # check if repo is in the set of allowed; if the allowed set exists, make sure it is in it
+        in_allowed = allow_repos is None or allow_repos.__contains__(item.name)
+        # ignore non-dirs, repos to ignore (if any), and ensure they are in the set of allowed if it exsists
+        if not (item.is_dir() and not in_ignored and in_allowed):
+            continue # skip
         # get the name of a cloned repo
         local_repo = item.name
         repo_dir = cwd / path(local_repo)
@@ -79,7 +114,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
         local_repo_menu.add_option(local_repo, handle_bash_cmd)
     
     # add final option to the menu to exit
-    local_repo_menu.add_option("<GO BACK>", handle_go_back)
+    local_repo_menu.add_option(f"{Terminal.Text.YELLOW}<GO BACK>{Terminal.Text.END}", handle_go_back)
     # run menu and return last option selected
     return local_repo_menu.run() 
    

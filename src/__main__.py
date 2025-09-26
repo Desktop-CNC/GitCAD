@@ -12,7 +12,7 @@ def handle_clone_repository(cwd: path):
     """
     # prompt the repo cloning
     margin = " " * GUIMenu.MENU_ORIGIN[0]
-    print(f"\n{margin}Lets clone from GitHub.\n")
+    print(f"\n{margin}Lets {Terminal.Text.YELLOW}clone{Terminal.Text.END} from GitHub.\n")
     # get online GitHub repo URL
     repo_url = input(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}Please input the GitHub Repository URL: {Terminal.Text.RESET}")
     
@@ -36,7 +36,7 @@ def handle_pull_repository(cwd: path):
     Handler.handle_repository_menu(
         cwd=cwd, 
         menu_title="Here are your local repos.",
-        subtitle_text="Select the one you want to pull changes from GitHub for.", 
+        subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}pull changes{Terminal.Text.END} from GitHub for.", 
         bash_cmds=[
             # stash (keep) local changes and pull from github
             ["git", "stash"],
@@ -56,7 +56,7 @@ def handle_push_repository(cwd: path):
     Handler.handle_repository_menu(
         cwd=cwd, 
         menu_title="Here are your local repos.",
-        subtitle_text="Select the one you want to push changes back to GitHub for.",
+        subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}push changes{Terminal.Text.CYAN} back to GitHub for.",
         bash_cmds=[
             # ask for commit message and push to github
             ["git", "add", "."],
@@ -75,23 +75,34 @@ def handle_create_dependency(cwd: path):
     parent_repo = Handler.handle_repository_menu(
         cwd=cwd,
         menu_title="Here are your local repos.",
-        subtitle_text="Select the one you wand to create a dependency for.",
+        subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}create{Terminal.Text.CYAN} a {Terminal.Text.YELLOW}dependency{Terminal.Text.CYAN} for.",
         bash_cmds=[],
         success_msg="",
         err_msg="",
         pause_prompt=False
     )
+    # check if the menu was exited
+    if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
+        return
+    # repos that are already dependencies of the parent; ignore them below
+    current_repo_deps = Handler.handle_repository_dependendencies(cwd=cwd / path(parent_repo))
+    ignore_repos = current_repo_deps # repos to ignore
+    ignore_repos.append(parent_repo)
     # get the dependency repo from another menu
     dep_repo = Handler.handle_repository_menu(
         cwd=cwd,
         menu_title="Here are your local repos.",
-        subtitle_text="Select the dependency.",
+        subtitle_text=f"Select the {Terminal.Text.YELLOW}dependency{Terminal.Text.CYAN} to add to {Terminal.Text.YELLOW}{parent_repo}{Terminal.Text.CYAN}.",
         bash_cmds=[],
         success_msg="",
         err_msg="",
         pause_prompt=False,
-        ignore_repos=[parent_repo]
+        ignore_repos=ignore_repos
     )
+    # check if the menu was exited
+    if dep_repo.__contains__('<') and dep_repo.__contains__('>'):
+        handle_create_dependency(cwd=cwd) # restart the whole process
+        return # exit upon completion
 
     try:
         # get repo directories 
@@ -119,23 +130,33 @@ def handle_delete_dependency(cwd: path):
     parent_repo = Handler.handle_repository_menu(
         cwd=cwd,
         menu_title="Here are your local repos.",
-        subtitle_text="Select which to delete a dependency from.",
+        subtitle_text=f"Select which to {Terminal.Text.YELLOW}delete{Terminal.Text.CYAN} a {Terminal.Text.YELLOW}dependency{Terminal.Text.CYAN} from.",
         bash_cmds=[],
         success_msg="",
         err_msg="",
         pause_prompt=False
     )
+    # check if the menu was exited
+    if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
+        return
+    # get repos allowed to be deleted (deps of the parent)
+    allowed_repos = Handler.handle_repository_dependendencies(cwd=cwd / path(parent_repo))
     # get dependency repo from another menu
     dep_repo = Handler.handle_repository_menu(
         cwd=cwd, 
-        menu_title="Here are your local repos.", 
+        menu_title=f"Here are your local repos that are {Terminal.Text.YELLOW}dependencies{Terminal.Text.BLUE} for {Terminal.Text.YELLOW}{parent_repo}{Terminal.Text.BLUE}.", 
         subtitle_text="Select the dependency to delete.",
         bash_cmds=[],
         success_msg="",
         err_msg="",
         pause_prompt=False,
-        ignore_repos=[parent_repo]
+        allow_repos=allowed_repos
     )
+
+    # check if the menu was exited
+    if dep_repo.__contains__('<') and dep_repo.__contains__('>'):
+        handle_delete_dependency(cwd=cwd) # restart the whole process
+        return # exit upon completion
 
     try:
         # get parent repo directory 
@@ -156,15 +177,15 @@ def handle_delete_dependency(cwd: path):
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()
 
-def handle_sync_dependencies(cwd: str):
+def handle_restore_dependencies(cwd: str):
     """
-    Syncs dependencies to the current versions tagged and available for a repository.
+    Resets dependencies to the current versions tagged and available for a repository.
     param: cwd [str] The GitHub current working directory
     """
     Handler.handle_repository_menu(
         cwd=cwd,
-        menu_title="Here are your local repos. Syncing completely resets dependencies!",
-        subtitle_text="Select which to sync to current dependency versions on GitHub",
+        menu_title="Here are your local repos.",
+        subtitle_text=f"Select which to {Terminal.Text.YELLOW}restore{Terminal.Text.CYAN} its {Terminal.Text.YELLOW}dependencies{Terminal.Text.CYAN} for.",
         bash_cmds=[
             # pull content of current versions of deps and do a hard-reset on local copies
             ["git", "fetch", "origin"],
@@ -183,7 +204,7 @@ def handle_update_to_latest_dependencies(cwd: str):
     Handler.handle_repository_menu(
         cwd=cwd,
         menu_title="Here are your local repositories.",
-        subtitle_text="Select which to update its dependencies. The update will be pushed to GitHub",
+        subtitle_text=f"Select which to {Terminal.Text.YELLOW}update dependencies{Terminal.Text.CYAN} to {Terminal.Text.YELLOW}latest versions{Terminal.Text.CYAN} for.",
         bash_cmds=[
             # get latest versions of deps and push these changes to github 
             ["git", "submodule", "update", "--remote"],
@@ -212,7 +233,7 @@ def __main__():
     main_menu.add_option("Push repository changes back to GitHub", handle_push_repository, Handler.handle_github_current_working_directory)
     main_menu.add_option("Create a new dependency", handle_create_dependency, Handler.handle_github_current_working_directory)
     main_menu.add_option("Delete a dependency", handle_delete_dependency, Handler.handle_github_current_working_directory)
-    main_menu.add_option("Reset dependencies to the current versions", handle_sync_dependencies, Handler.handle_github_current_working_directory)
+    main_menu.add_option("Retore dependencies to the current versions", handle_restore_dependencies, Handler.handle_github_current_working_directory)
     main_menu.add_option("Set dependencies latest versions available", handle_update_to_latest_dependencies, Handler.handle_github_current_working_directory)
     main_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the main menu
