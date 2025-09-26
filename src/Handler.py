@@ -37,7 +37,7 @@ def handle_github_current_working_directory():
     cwd.mkdir(parents=True, exist_ok=True)
     return cwd
 
-def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None, allow_repos: list=None):
+def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_msg: str, err_msg: str, pause_prompt: bool=True, subtitle_text: str=None, ignore_repos: list=None, allow_repos: list=None, auto_close: bool=True):
     """
     Handles creating a menu listing local repositories as options.
     param: cwd [str] The GitHub current working directory
@@ -51,7 +51,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
     param: allow_repos [list] Optional list of repos allowed in the menu; found repos not in this list are ignored if the list is not None
     """
     root_dir = cwd # the root of locally cloned repos from the cwd
-    local_repo_menu = GUIMenu(title_text=menu_title, subtitle_text=subtitle_text) # create the menu
+    local_repo_menu = GUIMenu(title_text=menu_title, subtitle_text=subtitle_text, auto_close=auto_close) # create the menu
 
     def handle_go_back():
         """

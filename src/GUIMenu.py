@@ -13,7 +13,7 @@ class GUIMenu:
     MENU_PADDING = 2
     MENU_ARROW = "➤"
 
-    def __init__(self, title_text: str, subtitle_text: str=None):
+    def __init__(self, title_text: str, subtitle_text: str=None, auto_close: bool=True):
         """
         Creates a GUIMenu instance. 
         param: title_text [str] The specified title
@@ -23,6 +23,7 @@ class GUIMenu:
         self.subtitle_text = subtitle_text if subtitle_text is not None else ""
         self.arrow_index = 0 # where to start the option selector
         self.prompts = [] # list of options' prompts and handlers 
+        self.auto_close = auto_close
         Terminal.Screen.clear_screen() # clear the screen for the menu
         self.run_flag = True # runs the menu when true
 
@@ -134,8 +135,9 @@ class GUIMenu:
                 for i in range(0, len(self.prompts)+1):
                     Terminal.Screen.move_cursor_relatively(-1,0)
                     Terminal.Screen.clear_line()
-                
-        Terminal.Screen.clear_screen()
+        
+        if self.auto_close: # handle auto closing
+            Terminal.Screen.clear_screen()
         # returns the menu options selected at runtime
         if option_selected.__contains__("deps:"):
             return option_selected.split(">")[0].strip()

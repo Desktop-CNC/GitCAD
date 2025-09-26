@@ -60,21 +60,23 @@ def handle_push_repository(cwd: path):
         bash_cmds=[],
         success_msg="",
         err_msg="",
-        pause_prompt=False
+        pause_prompt=False,
+        auto_close=False
     )   
     # check if the menu was exited
     if local_repo.__contains__('<') and local_repo.__contains__('>'):
         return
     # get commit message to push
     commit_message = input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.BLUE}What changes were made? {Terminal.Text.CYAN}Press enter when done, but type here: {Terminal.Text.RESET}")
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
     # try to push
     try:
         Terminal.run_bash_cmd(["git", "add", "."], cwd=cwd / path(local_repo))
         Terminal.run_bash_cmd(["git", "commit", "-m", commit_message], cwd=cwd / path(local_repo))
         Terminal.run_bash_cmd(["git", "push"], cwd=cwd / path(local_repo))
-        input(f"\n{Terminal.Text.GREEN}Successfully pushed the repository to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.GREEN}Successfully pushed the repository to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except:
-        input(f"\n{Terminal.Text.RED}Did not push changes. It's possible there are no changes to push.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.RED}Did not push changes. It's possible there are no changes to push.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_line()
 
@@ -91,7 +93,8 @@ def handle_create_dependency(cwd: path):
         bash_cmds=[],
         success_msg="",
         err_msg="",
-        pause_prompt=False
+        pause_prompt=False,
+        auto_close=False
     )
     # check if the menu was exited
     if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
@@ -109,6 +112,7 @@ def handle_create_dependency(cwd: path):
         success_msg="",
         err_msg="",
         pause_prompt=False,
+        auto_close=False,
         ignore_repos=ignore_repos
     )
     # check if the menu was exited
@@ -116,6 +120,7 @@ def handle_create_dependency(cwd: path):
         handle_create_dependency(cwd=cwd) # restart the whole process
         return # exit upon completion
 
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
     try:
         # get repo directories 
         parent_repo_dir = cwd / path(parent_repo)
@@ -127,9 +132,9 @@ def handle_create_dependency(cwd: path):
         Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "commit", "-am", f"Created {dep_repo} as a submodule/dependency to {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
-        input(f"\n{Terminal.Text.GREEN}Successfully created dependency and pushed it to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.GREEN}Successfully created dependency and pushed it to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except:
-        input(f"\n{Terminal.Text.RED}Failed to create dependency. It may already exist, or a chosen repository does not.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.RED}Failed to create dependency. It may already exist, or a chosen repository does not.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()
 
@@ -146,7 +151,8 @@ def handle_delete_dependency(cwd: path):
         bash_cmds=[],
         success_msg="",
         err_msg="",
-        pause_prompt=False
+        pause_prompt=False,
+        auto_close=False
     )
     # check if the menu was exited
     if parent_repo.__contains__('<') and parent_repo.__contains__('>'):
@@ -162,6 +168,7 @@ def handle_delete_dependency(cwd: path):
         success_msg="",
         err_msg="",
         pause_prompt=False,
+        auto_close=False,
         allow_repos=allowed_repos
     )
 
@@ -170,6 +177,7 @@ def handle_delete_dependency(cwd: path):
         handle_delete_dependency(cwd=cwd) # restart the whole process
         return # exit upon completion
 
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
     try:
         # get parent repo directory 
         parent_repo_dir = cwd / path(parent_repo)
@@ -193,9 +201,9 @@ def handle_delete_dependency(cwd: path):
         # commit and push changes of removed dependency
         Terminal.run_bash_cmd(["git", "commit", "-m", f"Deleted submodule/dependency {dep_repo} from {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
-        input(f"\n{Terminal.Text.GREEN}Successfully deleted dependency and pushed change to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.GREEN}Successfully deleted dependency and pushed change to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except Exception as e:
-        input(f"\n{Terminal.Text.RED}Failed to delete dependency. It may not exist, or already deleted.{Terminal.Text.RESET} Press enter to continue.\n")
+        input(f"\n{margin}{Terminal.Text.RED}Failed to delete dependency. It may not exist, or already deleted.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()
 
@@ -243,7 +251,8 @@ def handle_update_to_latest_dependencies(cwd: str):
     )
 
 def handle_exit():
-    print("\n exiting program...")
+    margin = " " * GUIMenu.MENU_ORIGIN[0]
+    print(f"\n {margin}exiting program...")
     exit(0)
 
 def __main__():
