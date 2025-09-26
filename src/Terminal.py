@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from pathlib import Path as path
+import Terminal
 import subprocess
 import sys
 
@@ -60,12 +61,31 @@ class Text:
     def __init__(self):
         pass
 
-def run_bash_cmd(cmd: list, cwd:str=None):
+def run_bash_cmd(cmd: list, cwd:path=None):
     """
     Runs a bash command. 
     param: cmd [list] The command to run
     param: cwd [str] Optional current working directory
     """
     result = subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True, shell=True)
+    # print commands printed from the current working directory 
+    margin = " "*4 # margin for offset
+    # get name from cwd directory and pop off the end    
+    repo_name = cwd.__str__().split(slash()).pop()
+    cmd_str = " ".join(result.args) # get list of args 
+    # format cwd and command line args to show the bash command
+    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
+    # return results
     return result
 
+def slash():
+    """
+    Returns the slash notation of the operating system.
+    """
+    if sys.platform.startswith("win"):
+        return "\\"
+    elif sys.platform.startswith("linux"):
+        return "/"
+    elif sys.platform.startswith("darwin"):
+        return "/"
+    return None

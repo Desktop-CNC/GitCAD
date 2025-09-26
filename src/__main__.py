@@ -1,9 +1,8 @@
 from GUIMenu import GUIMenu
 from pathlib import Path as path
-import subprocess
 import Terminal
 import Handler
-import os
+import sys
 
 def handle_clone_repository(cwd: path):
     """
@@ -53,18 +52,31 @@ def handle_push_repository(cwd: path):
     param: cwd [str] The GitHub current working directory
     """
     margin = " " * GUIMenu.MENU_ORIGIN[0]
-    Handler.handle_repository_menu(
+    # get the repo from the menu
+    local_repo = Handler.handle_repository_menu(
         cwd=cwd, 
         menu_title="Here are your local repos.",
         subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}push changes{Terminal.Text.CYAN} back to GitHub for.",
-        bash_cmds=[
-            # ask for commit message and push to github
-            ["git", "add", "."],
-            ["git", "commit", "-m", input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.BLUE}What changes were made? {Terminal.Text.CYAN}Press enter when done, but type here: {Terminal.Text.RESET}")],
-            ["git", "push"]],
-        success_msg="Successfully pushed the repository",
-        err_msg="Did not push changes. It's possible there are no changes to push."
-    )    
+        bash_cmds=[],
+        success_msg="",
+        err_msg="",
+        pause_prompt=False
+    )   
+    # check if the menu was exited
+    if local_repo.__contains__('<') and local_repo.__contains__('>'):
+        return
+    # get commit message to push
+    commit_message = input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.BLUE}What changes were made? {Terminal.Text.CYAN}Press enter when done, but type here: {Terminal.Text.RESET}")
+    # try to push
+    try:
+        Terminal.run_bash_cmd(["git", "add", "."], cwd=cwd / path(local_repo))
+        Terminal.run_bash_cmd(["git", "commit", "-m", commit_message], cwd=cwd / path(local_repo))
+        Terminal.run_bash_cmd(["git", "push"], cwd=cwd / path(local_repo))
+        input(f"\n{Terminal.Text.GREEN}Successfully pushed the repository to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
+    except:
+        input(f"\n{Terminal.Text.RED}Did not push changes. It's possible there are no changes to push.{Terminal.Text.RESET} Press enter to continue.\n")
+    # clear the screen once done with menu
+    Terminal.Screen.clear_line()
 
 def handle_create_dependency(cwd: path):
     """
@@ -165,14 +177,24 @@ def handle_delete_dependency(cwd: path):
         # remove submodule tracking
         Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "rm", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+    
+        # get args based on os
+        args = (None, None, None)
+        if sys.platform.startswith("win"):
+            args = ("rmdir", "/s", "/q")
+        elif sys.platform.startswith("linux"):
+            args = ("rm", "-rf", " ")
+        elif sys.platform.startswith("darwin"):
+            args = ("rm", "-rf", " ")
         # clean up metadata left over
-        Terminal.run_bash_cmd(["rm", "-rf", f"{path('.git') / path('modules') / path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd(["rm", "-rf", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('.git') / path('modules') / path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+       
         # commit and push changes of removed dependency
         Terminal.run_bash_cmd(["git", "commit", "-m", f"Deleted submodule/dependency {dep_repo} from {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
         input(f"\n{Terminal.Text.GREEN}Successfully deleted dependency and pushed change to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
-    except:
+    except Exception as e:
         input(f"\n{Terminal.Text.RED}Failed to delete dependency. It may not exist, or already deleted.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
     Terminal.Screen.clear_screen()

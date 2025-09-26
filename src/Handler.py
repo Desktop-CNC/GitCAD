@@ -3,18 +3,6 @@ import sys
 from GUIMenu import GUIMenu
 import Terminal
 
-def slash():
-    """
-    Returns the slash notation of the operating system.
-    """
-    if sys.platform.startswith("win"):
-        return "\\"
-    elif sys.platform.startswith("linux"):
-        return "/"
-    elif sys.platform.startswith("darwin"):
-        return "/"
-    return None
-
 def handle_repository_dependendencies(cwd: path):
     """
     Gets a list of the immediate dependencies associated with a given repository. Reads from .gitmodules file.
@@ -97,11 +85,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
             try: # attempt to run bash with the repo dir
                 for cmd in bash_cmds:
                     # bash does not yet know which repo and where
-                    cmd_output = Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
-                    # get inline command as a string
-                    cmd_str = " ".join(cmd_output.args)
-                    # print commands printed from the current working directory 
-                    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
+                    Terminal.run_bash_cmd(cmd, cwd=repo_dir) # run bash command
                 if pause_prompt:
                     input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}{success_msg}{Terminal.Text.RESET} Press enter to continue.\n")
             except: # handle failed bash command
