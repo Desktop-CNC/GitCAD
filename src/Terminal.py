@@ -67,16 +67,21 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     param: cmd [list] The command to run
     param: cwd [str] Optional current working directory
     """
-    result = subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True, shell=True)
-    # print commands printed from the current working directory 
-    margin = " "*4 # margin for offset
-    # get name from cwd directory and pop off the end    
-    repo_name = cwd.__str__().split(slash()).pop()
-    cmd_str = " ".join(result.args) # get list of args 
-    # format cwd and command line args to show the bash command
-    print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
-    # return results
-    return result
+    try:
+        shell = sys.platform.startswith("win") # only use shell on windows
+        result = subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True, shell=shell)
+        # print commands printed from the current working directory 
+        margin = " "*4 # margin for offset
+        # get name from cwd directory and pop off the end    
+        repo_name = cwd.__str__().split(slash()).pop()
+        cmd_str = " ".join(result.args) # get list of args 
+        # format cwd and command line args to show the bash command
+        print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
+        # return results
+        return result
+    except Exception as e:
+        print(f" ERROR : {e}")
+    return None
 
 def slash():
     """
