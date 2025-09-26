@@ -36,7 +36,7 @@ def handle_pull_repository(cwd: path):
     Handler.handle_repository_menu(
         cwd=cwd, 
         menu_title="Here are your local repos.",
-        subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}pull changes{Terminal.Text.END} from GitHub for.", 
+        subtitle_text=f"Select the one you want to {Terminal.Text.YELLOW}pull changes{Terminal.Text.CYAN} from GitHub for.", 
         bash_cmds=[
             # stash (keep) local changes and pull from github
             ["git", "stash"],
