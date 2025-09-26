@@ -11,21 +11,12 @@ Any CAD project or assembly can be made of many other assemblies; typically know
 
 For these reasons, merge conflicts should be avoided entirely and so should having more than one developer working on a CAD repository at a time.
 
-A **dependency** is a repository that is needed for another parent repository. An example of this is a **Enclosure assembly** CAD repository that has the **Standard Parts** repository as a dependency. A copy of _Standard Parts_ will exist within a `/deps` folder of _Enclosure assembly_. If changes are made to the _Standard Parts_ repository, it will not affect _Enclosure assembly_. If it is decided to update the dependencies under _Enclosure assembly_, then the copy of _Standard Parts_ under _Enclosure assembly_ will be updated. 
-
-Putting _GitCAD_ in practice, _Enclosure assembly_ and _Standard Parts_ can be separate repositories that different developers can work on at the same time. Since they exist on separate repositories, merge conflicts are avoided entirely. If one parent repository depends on another, the parent can try to update its dependencies if there are new versions available. 
+A **dependency** is a repository that is needed for another parent repository. This allows on one repository to depend and and import another. When resolving conflicting changes and merge conflicts should be avoided, the work across a larger project can be split across many repositories that have dependencies to others. 
 
 ## Available Distributions:
-TO DO
+_GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/executables`)
+- <a href="./executables/GitCAD_Linux"><strong>GitCAD_Linux</strong></a>
+- <a href="./executables/GitCAD_Win64.exe"><strong>GitCAD_Win64.exe</strong></a>
 
 ## How It Works:
-### Cloning a CAD Repository
-Write this up
-### Pulling a CAD Repository
-Write this up
-### Pushing a CAD Repository
-Write this up
-### Adding / Removing a Dependency
-Write this up
-### Updating Local Dependencies
-Write this up
+The app is a menu that is navigated with UP/DOWN arrow keys and by selecting ENTER. 
