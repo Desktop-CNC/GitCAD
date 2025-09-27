@@ -33,9 +33,15 @@ The app is a menu that is navigated with `UP`/`DOWN` **arrow keys** and by selec
 These abilities of _GitCAD_ that were listed can be seen above in the _GitCAD_ menu. Pressing `ENTER` on the clone option will give the prompt at the bottom of the screen. 
 
 ### Cloning Repositories:
-**An http or ssh URL is needed from GitHub that is pasted in here. This clones a repository on your computer at `/Documents/GitHub`**
+**An http or ssh URL is needed from GitHub that is pasted in here. This clones a repository on your computer at `/Documents/GitHub` folder**
 
-All other options on the menu will use the repositories downloaded to your computer. The user only has to use the _GitCAD_ menu after cloning. 
+<div>
+    <img style="width: 75%;" alt="GitHub Folder on your Computer" src="./assets/GitHub_folder.png">
+</div>
+
+Seen in the image above, all repositories are downloaded (cloned/pulled) into the `/Documents/GitHub` folder. 
+
+All other options on the menu will use the repositories already downloaded to your computer. You can use just _GitCAD_ menu after cloning for everything else.
 
 ### Pushing / Pulling Repositories:
 Once cloned to the computer, pushing and pulling are the main ways to use your repository. Pushing is the action of uploading changes back to GitHub. This requires an update message explaining the change. Pulling is the action of downloading the repository from GitHub to your computer. Pulling allows you to get the most recent copy of a repository on your computer. 
@@ -48,7 +54,17 @@ A dependency is downloaded with the parent repository it belongs to as one whole
 
 The dependency will have more than one version. Especially since it also is a repository that also receives updates on GitHub. However, the version of the dependency connected to a parent repository does not change automatically. 
 
-**If Enclosure v1.5** repository has a dependency of **STD CAD**. This dependency is on version v1.1. Then it gets an update and becomes v1.2, the **Enclosure v1.5** still has **STD CAD v1.1** **, and NOT the new version v1.5** Under **Enclosure v1.5** you can **Set dependencies latest versions available** on the _GitCAD_ main menu. This will set the dependency from **v1.1** to **v1.2** so **Enclosure v1.5** has **STD CAD v1.2** and gets the update. 
+**If Enclosure v1.5** repository has a dependency of **STD CAD**. This dependency is on version v1.1. Then it gets an update and becomes v1.2, the **Enclosure v1.5** still has **STD CAD v1.1** **, and NOT the new version v1.2** Under **Enclosure v1.5** you can **Set dependencies latest versions available** on the _GitCAD_ main menu. This will set the dependency from **v1.1** to **v1.2** so **Enclosure v1.5** has **STD CAD v1.2** and gets the update. 
 
 You can either restore the dependency of a repository to the current version or it can be updated to a later version if there is one on GitHub. 
 
+### Viewing Repositories:
+For most things you can do with _GitCAD_, you are needing to choose a repository. (i.e. choosing a repository to pull) For most of these choices on the main menu, click them will load a new menu with a prompt. **A repository must be cloned to your computer to use it in any way**. This is because _GitCAD_ only loads repositories found in your `/Documents/GitHub` folder on your computer. 
+<div>
+    <img style="width: 75%" alt="GitCAD Pulling Repo Menu" src="./assets/GitCAD_deps_ex.png">
+</div>
+In addition to loading all repositories in the `Documents/GitHub` folder, you can also view which repositories are dependencies for another. **All repositories will look like: "NAME" > deps [dep1, dep2, ...]`. If the repository has dependendencies, they will also be listed (i.e. dep1, dep2, ...). 
+
+In the image above, you can see `Enclosure` and `Main` are listed repositories both have dependencies. `Main` has dependencies of: `Enclosure`, and `StandardCAD`. 
+
+Also, `Enclosure`, as its own repository has `StandardCAD` also as a dependency in the same way `Main` does. If a repository has no dependencies, none will be listed after its name. For example, `GitCAD` in the image above has no dependencies. 
