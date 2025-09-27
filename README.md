@@ -64,7 +64,7 @@ For most things you can do with _GitCAD_, you are needing to choose a repository
     <img style="width: 75%" alt="GitCAD Pulling Repo Menu" src="./assets/GitCAD_deps_ex.png">
 </div>
 
-In addition to loading all repositories in the `Documents/GitHub` folder, you can also view which repositories are dependencies for another. **All repositories will look like: `"NAME"` `> deps [dep1, dep2, ...]`. If the repository has dependendencies, they will also be listed (i.e. dep1, dep2, ...). 
+In addition to loading all repositories in the `Documents/GitHub` folder, you can also view which repositories are dependencies of another. **All repositories will look like: `"NAME"` `> deps [dep1, dep2, ...]`. If the repository has dependendencies, they will also be listed (i.e. dep1, dep2, ...).**
 
 In the image above, you can see `Enclosure` and `Main` are listed repositories both have dependencies. `Main` has dependencies of: `Enclosure`, and `StandardCAD`. 
 
