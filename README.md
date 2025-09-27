@@ -19,4 +19,36 @@ _GitCAD_ has been developed for both Linux and Windows systems. These can be fou
 - <a href="./executables/GitCAD_Win64.exe"><strong>GitCAD_Win64.exe</strong></a>
 
 ## How It Works:
-The app is a menu that is navigated with UP/DOWN arrow keys and by selecting ENTER. 
+### Overview:
+The app is a menu that is navigated with `UP`/`DOWN` **arrow keys** and by selecting `ENTER`. **The program allows you to do the following:**
+- Clone / Push / Pull Repositories 
+- Create / Delete **Depdendencies** 
+- Restore Dependencies to their current version
+- Update Dependencies to their latest available version
+
+<div>
+    <img style="margin: 0 auto; width: 75%;" alt="Image of GitCAD Main Menu" src="./assets/GitCAD_menu.png">
+</div>
+
+These abilities of _GitCAD_ that were listed can be seen above in the _GitCAD_ menu. Pressing `ENTER` on the clone option will give the prompt at the bottom of the screen. 
+
+### Cloning Repositories:
+**An http or ssh URL is needed from GitHub that is pasted in here. This clones a repository on your computer at `/Documents/GitHub`**
+
+All other options on the menu will use the repositories downloaded to your computer. The user only has to use the _GitCAD_ menu after cloning. 
+
+### Pushing / Pulling Repositories:
+Once cloned to the computer, pushing and pulling are the main ways to use your repository. Pushing is the action of uploading changes back to GitHub. This requires an update message explaining the change. Pulling is the action of downloading the repository from GitHub to your computer. Pulling allows you to get the most recent copy of a repository on your computer. 
+
+### Adding / Deleting Dependencies:
+A repository can have dependencies. A dependency is another repository. This allows a repository to include/import/depend on another. Looking at the _GitCAD_ main menu, a dependency can be added or deleted. Both actions will ask for two repositories, (1) the repo, and (2) the dependency. 
+
+### Dependency Version Control: 
+A dependency is downloaded with the parent repository it belongs to as one whole package. All dependencies will exist in the repository folder under the `/deps` folder. You can **restore** a dependency to the current version on the parent repository. This is so that if you make changes to the dependency to test something, etc, on your computer, you can reset the dependency to its initial state. 
+
+The dependency will have more than one version. Especially since it also is a repository that also receives updates on GitHub. However, the version of the dependency connected to a parent repository does not change automatically. 
+
+**If Enclosure v1.5** repository has a dependency of **STD CAD**. This dependency is on version v1.1. Then it gets an update and becomes v1.2, the **Enclosure v1.5** still has **STD CAD v1.1** **, and NOT the new version v1.5** Under **Enclosure v1.5** you can **Set dependencies latest versions available** on the _GitCAD_ main menu. This will set the dependency from **v1.1** to **v1.2** so **Enclosure v1.5** has **STD CAD v1.2** and gets the update. 
+
+You can either restore the dependency of a repository to the current version or it can be updated to a later version if there is one on GitHub. 
+
