@@ -45,6 +45,8 @@ def handle_pull_repository(cwd: path):
         success_msg="Successfully pulled the repository.",
         err_msg="Failed to pull the repository."
     )
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_push_repository(cwd: path):
     """
@@ -65,6 +67,8 @@ def handle_push_repository(cwd: path):
     )   
     # check if the menu was exited
     if local_repo.__contains__('<') and local_repo.__contains__('>'):
+        # clear the screen once done with menu
+        Terminal.Screen.clear_screen()
         return
     # get commit message to push
     commit_message = input(f"\n{margin}{Terminal.Text.BOLD}{Terminal.Text.BLUE}What changes were made? {Terminal.Text.CYAN}Press enter when done, but type here: {Terminal.Text.RESET}")
@@ -78,7 +82,7 @@ def handle_push_repository(cwd: path):
     except:
         input(f"\n{margin}{Terminal.Text.RED}Did not push changes. It's possible there are no changes to push.{Terminal.Text.RESET} Press enter to continue.\n")
     # clear the screen once done with menu
-    Terminal.Screen.clear_line()
+    Terminal.Screen.clear_screen()
 
 def handle_create_dependency(cwd: path):
     """
@@ -119,6 +123,7 @@ def handle_create_dependency(cwd: path):
     # check if the menu was exited
     if dep_repo.__contains__('<') and dep_repo.__contains__('>'):
         handle_create_dependency(cwd=cwd) # restart the whole process
+        Terminal.Screen.clear_screen()
         return # exit upon completion
 
     margin = " " * GUIMenu.MENU_ORIGIN[0]
@@ -177,6 +182,7 @@ def handle_delete_dependency(cwd: path):
     # check if the menu was exited
     if dep_repo.__contains__('<') and dep_repo.__contains__('>'):
         handle_delete_dependency(cwd=cwd) # restart the whole process
+        Terminal.Screen.clear_screen()
         return # exit upon completion
 
     margin = " " * GUIMenu.MENU_ORIGIN[0]
@@ -228,6 +234,8 @@ def handle_restore_dependencies(cwd: str):
         success_msg="Successfully synced dependencies with versions on GitHub.",
         err_msg="Failed to sync dependencies."
     )
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_update_to_latest_dependencies(cwd: str):
     """
@@ -251,6 +259,8 @@ def handle_update_to_latest_dependencies(cwd: str):
         success_msg="Dependencies successfully updated and then pushed to GitHub.",
         err_msg="Failed to update dependencies. It could be that they're already up to date." 
     )
+    # clear the screen once done with menu
+    Terminal.Screen.clear_screen()
 
 def handle_exit():
     margin = " " * GUIMenu.MENU_ORIGIN[0]

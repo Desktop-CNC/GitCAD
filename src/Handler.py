@@ -59,7 +59,6 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
         """
         local_repo_menu.exit()
 
-    import time
     # step through the list of locally cloned repos
     for item in root_dir.iterdir():
         # check if repo is in the set of ignored repos; if this set exist and contains the repo it should be ignored
@@ -72,10 +71,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
         # get the name of a cloned repo
         local_repo = item.name
         repo_dir = cwd / path(local_repo)
-        # list of dependencies of the repo option
-        repo_deps = handle_repository_dependendencies(cwd=repo_dir)
-        row_deps = f"> {Terminal.Text.CYAN}deps: {Terminal.Text.CYAN}{repo_deps}{Terminal.Text.END}" if len(repo_deps) > 0 else ""
-        row = f"{local_repo} {row_deps}" 
+       
         def handle_bash_cmd(repo_name=local_repo, repo_dir=repo_dir):
             """
             Handles the bash command for for the local repo.
@@ -95,7 +91,7 @@ def handle_repository_menu(cwd: path, menu_title: str, bash_cmds: list, success_
             local_repo_menu.exit()
 
         # add option to the menu for the cloned repo
-        local_repo_menu.add_option(row, handle_bash_cmd)
+        local_repo_menu.add_option(local_repo, handle_bash_cmd)
     
     # add final option to the menu to exit
     local_repo_menu.add_option(f"{Terminal.Text.YELLOW}<GO BACK>{Terminal.Text.END}", handle_go_back)
