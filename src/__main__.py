@@ -267,6 +267,13 @@ def handle_exit():
     print(f"\n {margin}exiting program...")
     exit(0)
 
+# Building an EXE notes:
+# This can be done with pyinstaller on the cmd line:
+# EX: pyinstaller --onefile __main__.py --copy-metadata readchar
+# 
+# Add readchar; is is needed. 
+#
+
 def __main__():
 
     # create the main menu
