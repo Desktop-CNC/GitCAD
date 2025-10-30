@@ -16,7 +16,7 @@ def handle_clone_repository(cwd: path):
     repo_url = input(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.GREEN}Please input the GitHub Repository URL: {Terminal.Text.RESET}")
     
     try: # attempt to clone
-        Terminal.run_bash_cmd(["git", "clone", repo_url], cwd=str(cwd))
+        Terminal.run_bash_cmd(["git", "clone", "--recursive", repo_url], cwd=str(cwd))
         # import submodule/dependencies with cloned repo
         repo_name = repo_url.split(sep="/").pop().replace(".git", "")
         repo_dir = cwd / path(repo_name) # repo directory after cloning
