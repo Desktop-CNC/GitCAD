@@ -52,14 +52,15 @@ class GUIMenu:
         content = f"{padding_str}{line}{padding_str}"
         
         # get content len without ascii
-        actual_line_length = len(re.sub(r'\033\[[0-9;]*m', '', content))
+        actual_line_length = len(re.sub(r'\033\[[0-9;]*m|\033]8;;.*?\033\\'
+, '', content))
         whitespace = " "
         if content_width - actual_line_length >= 0:
             whitespace = " " * (content_width - actual_line_length) # whitespace to add for ljust
         else:
             # must trim content first
             content = f"{content[:max(0, actual_line_length)]}{Terminal.Text.RESET}..."
-            actual_line_length = len(re.sub(r'\033\[[0-9;]*m', '', content))
+            actual_line_length = len(re.sub(r'\033\[[0-9;]*m|\033]8;;.*?\033\\', '', content))
             whitespace = " " * (content_width - actual_line_length) # whitespace to add for ljust
         # insert text into fixed length content area
         content = (content + whitespace)
@@ -127,7 +128,9 @@ class GUIMenu:
                     # check for args
                     args = self.prompts[self.arrow_index][2]
                     if args is None: # call option handler function without args
-                        self.prompts[self.arrow_index][1]()
+                        handler = self.prompts[self.arrow_index][1]
+                        if handler is not None:
+                            handler() # call existing handler function
                     else: # call option handler function with args
                         # call args to get content
                         self.prompts[self.arrow_index][1](args())
@@ -146,7 +149,4 @@ class GUIMenu:
         
         if self.auto_close: # handle auto closing
             Terminal.Screen.clear_screen()
-        # returns the menu options selected at runtime
-        if option_selected.__contains__("deps:"):
-            return option_selected.split(">")[0].strip()
         return option_selected.strip()
