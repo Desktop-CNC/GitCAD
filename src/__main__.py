@@ -2,7 +2,9 @@ from GUIMenu import GUIMenu
 from pathlib import Path as path
 import Terminal
 import Handler
+import subprocess
 import sys
+import os
 
 def handle_clone_repository(cwd: path):
     """
@@ -276,6 +278,15 @@ def handle_exit():
 
 def __main__():
 
+    # test SSH tty authorization
+    result = subprocess.run(
+        ["ssh", "-T", "git@github.com"],
+        stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,
+        env=os.environ,
+        check=True
+    )
+    print(result)
+    return
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
