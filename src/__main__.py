@@ -269,6 +269,36 @@ def handle_exit():
     print(f"\n {margin}exiting program...")
     exit(0)
 
+def handle_bypass_ssh_auth(menu: GUIMenu):
+    Terminal.Screen.clear_screen()
+    menu.exit()
+
+def handle_ssh_auth(menu: GUIMenu):
+    
+    print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}You may need to give a key passphrase. {Terminal.Text.BLUE}You CANNOT see it as you type! \nYou give it a SECOND time to confirm it.{Terminal.Text.RESET}")
+    print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
+    result = subprocess.run(
+        ["ssh", "-T", "git@github.com"],
+            stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,
+            env=os.environ
+    )
+
+    if result.returncode == 255: # failed to authenticate
+        print(f"{Terminal.Text.RED}\nLooks like authentication failed.{Terminal.Text.BOLD} (or you didn't give an SSH Key){Terminal.Text.END} \nUnderstand secure access to GitHub is limited without a key.{Terminal.Text.RESET}")
+        input(f"{Terminal.Text.BOLD}{Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")  
+        Terminal.Screen.clear_screen() 
+        menu.exit()
+        return
+    elif result.returncode == 1: # failed without GitHub tty access; but auth succeeded
+        input(f"{Terminal.Text.BOLD}{Terminal.Text.GREEN}Authentication Complete and Signed In! {Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
+        Terminal.Screen.clear_screen()
+        menu.exit()
+        return
+    input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: Authentication proceeded with unknown status!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
+    menu.exit()
+    return
+
+
 # Building an EXE notes:
 # This can be done with pyinstaller on the cmd line:
 # EX: pyinstaller --onefile __main__.py --copy-metadata readchar
@@ -279,14 +309,18 @@ def handle_exit():
 def __main__():
 
     # test SSH tty authorization
-    result = subprocess.run(
-        ["ssh", "-T", "git@github.com"],
-        stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,
-        env=os.environ,
-        check=True
-    )
-    print(result)
-    return
+    Terminal.Screen.clear_screen()
+    ssh_url = "https://docs.github.com/en/authentication/connecting-to-github-with-ssh/about-ssh"
+    ssh_link = f"\033]8;;{ssh_url}\033\\SSH Key\033]8;;\033\\"
+    
+    # create ssh auth menu
+    auth_menu = GUIMenu(title_text=f"Welcome to GitCAD. {Terminal.Text.YELLOW}Would you like to use an GitHub SSH key?", 
+                        subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
+    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END} here.", handle_ssh_auth, lambda: auth_menu)
+    auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_bypass_ssh_auth, lambda: auth_menu)
+    auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
+    # run the auth menu
+    auth_menu.run()
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
