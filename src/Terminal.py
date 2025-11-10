@@ -3,6 +3,7 @@ from pathlib import Path as path
 import Terminal
 import subprocess
 import sys
+import os
 
 class Screen:
     """
@@ -69,7 +70,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     """
     try:
         shell = sys.platform.startswith("win") # only use shell on windows
-        result = subprocess.run(cmd, cwd=cwd, check=False, text=True, stdout=sys.stdout, stderr=sys.stderr, shell=shell)
+        result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr, shell=shell)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset
         # get name from cwd directory and pop off the end    
