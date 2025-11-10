@@ -70,7 +70,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     param: cwd [str] Optional current working directory
     """
     try:
-        result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stderr=sys.stderr)
+        result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset
         # get name from cwd directory and pop off the end    
