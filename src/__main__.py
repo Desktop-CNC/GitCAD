@@ -277,6 +277,10 @@ def handle_ssh_auth(menu: GUIMenu):
     ssh_key = find_ssh_key()
     if ssh_key[0].name == "id_ed25519":
         ssh_key = ssh_key[0]
+    else: 
+        input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: expected ssh key id_ed25519 but could not find it!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
+        menu.exit()
+        return
    
     # evaluate github ssh access
     github_ssh_call = subprocess.run(
