@@ -69,8 +69,12 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     param: cwd [str] Optional current working directory
     """
     try:
-        shell = sys.platform.startswith("win") # only use shell on windows
-        print("SSH_AUTH_SOCK:", os.environ.get("SSH_AUTH_SOCK"))
+        if sys.platform.startswith("win"):
+            socket_cmd = ["powershell", "-NoProfile", "-Command", r"Get-ChildItem '\\.\pipe\' | Where-Object { $_.Name -like 'ssh-*' } | Select-Object -First 1 -ExpandProperty Name"]
+            ssh_auth_socket = subprocess.check_output(socket_cmd, text=True).strip()
+            # On Windows, set this to the running agent pipe
+            os.environ["SSH_AUTH_SOCK"] = fr"\\.\pipe\ssh-{ssh_auth_socket}"
+
         result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset
