@@ -70,9 +70,6 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     param: cwd [str] Optional current working directory
     """
     try:
-        if sys.platform.startswith("win"):
-            pass 
-        print(f"SOCK: {os.environ.get('SSH_AUTH_SOCK')}")
         result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset
