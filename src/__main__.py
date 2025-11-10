@@ -281,7 +281,7 @@ def handle_ssh_auth(menu: GUIMenu):
     # evaluate github ssh access
     github_ssh_call = subprocess.run(
         ["ssh", "-o", "BatchMode=yes", "-T", "git@github.com"],
-        stdin=sys.stdin,
+        stdin=sys.stdin, stdout=sys.stdout,
         env=os.environ,
         check=False
     )
