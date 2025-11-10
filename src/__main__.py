@@ -274,23 +274,39 @@ def handle_bypass_ssh_auth(menu: GUIMenu):
     menu.exit()
 
 def handle_ssh_auth(menu: GUIMenu):
-    
-    print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}You may need to give a key passphrase. {Terminal.Text.BLUE}You CANNOT see it as you type! \nYou give it a SECOND time to confirm it.{Terminal.Text.RESET}")
-    print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
-    result = subprocess.run(
-        ["ssh", "-T", "git@github.com"],
-            stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr,
-            env=os.environ
+    ssh_key = find_ssh_key()
+    if ssh_key[0].name == "id_ed25519":
+        ssh_key = ssh_key[0]
+   
+    # evaluate github ssh access
+    github_ssh_call = subprocess.run(
+        ["ssh", "-o", "BatchMode=yes", "-T", "git@github.com"],
+        stdin=sys.stdin,
+        env=os.environ,
+        check=False
     )
 
-    if result.returncode == 255: # failed to authenticate
+    authorize_github_ssh = None
+    if github_ssh_call.returncode == 255: # ssh access is not yet granted
+        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is neeeded to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}")
+        print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
+        # attempt to authorize the key
+        authorize_github_ssh = subprocess.run(
+            ["ssh-add", f"{ssh_key}"],
+            stdin=sys.stdin, stdout=sys.stdout,
+            env=os.environ,
+            check=False
+        )
+
+    # authorize var should be none if it wasn't needed (ssh access already granted)
+    if authorize_github_ssh is not None and authorize_github_ssh.returncode != 0: # failed to authenticate
         print(f"{Terminal.Text.RED}\nLooks like authentication failed.{Terminal.Text.BOLD} (or you didn't give an SSH Key){Terminal.Text.END} \nUnderstand secure access to GitHub is limited without a key.{Terminal.Text.RESET}")
         input(f"{Terminal.Text.BOLD}{Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")  
         Terminal.Screen.clear_screen() 
         menu.exit()
         return
-    elif result.returncode == 1: # failed without GitHub tty access; but auth succeeded
-        input(f"{Terminal.Text.BOLD}{Terminal.Text.GREEN}Authentication Complete and Signed In! {Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
+    elif authorize_github_ssh is None or authorize_github_ssh.returncode == 0: # auth succeeded
+        input(f"{Terminal.Text.BOLD}{Terminal.Text.GREEN}Authentication Complete! {Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
         Terminal.Screen.clear_screen()
         menu.exit()
         return
@@ -298,6 +314,18 @@ def handle_ssh_auth(menu: GUIMenu):
     menu.exit()
     return
 
+def find_ssh_key():
+    """
+    Searches the `~/.ssh` directory for usable ssh keys. If the default "id_ed25519" key if found, only it is returned.  
+    """
+    ssh_dir = path.home() / ".ssh" # dir of keys 
+    def_key_dir = ssh_dir / "id_ed25519" # dir of default key
+    if def_key_dir.exists(): # return default key if found 
+        return [def_key_dir]
+    # find alternative to the default keys starting with "id_"
+    alt_key_dirs = list(ssh_dir.glob("id_*"))
+    alt_key_dirs = [key for key in alt_key_dirs if not key.name.endswith(".pub")] # ignore .pub
+    return alt_key_dirs
 
 # Building an EXE notes:
 # This can be done with pyinstaller on the cmd line:
@@ -314,9 +342,9 @@ def __main__():
     ssh_link = f"\033]8;;{ssh_url}\033\\SSH Key\033]8;;\033\\"
     
     # create ssh auth menu
-    auth_menu = GUIMenu(title_text=f"Welcome to GitCAD. {Terminal.Text.YELLOW}Would you like to use an GitHub SSH key?", 
+    auth_menu = GUIMenu(title_text=f"Welcome to GitCAD. {Terminal.Text.YELLOW}Would you like to use a GitHub SSH key?", 
                         subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
-    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END} here.", handle_ssh_auth, lambda: auth_menu)
+    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_ssh_auth, lambda: auth_menu)
     auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_bypass_ssh_auth, lambda: auth_menu)
     auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the auth menu
