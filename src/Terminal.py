@@ -70,6 +70,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     """
     try:
         shell = sys.platform.startswith("win") # only use shell on windows
+        print(subprocess.run(["ssh-add", "-l"], cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr))
         result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset
