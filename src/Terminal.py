@@ -4,6 +4,7 @@ import Terminal
 import subprocess
 import sys
 import os
+import re
 
 class Screen:
     """
@@ -70,10 +71,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     """
     try:
         if sys.platform.startswith("win"):
-            socket_cmd = ["powershell", "-NoProfile", "-Command", r"Get-ChildItem '\\.\pipe\' | Where-Object { $_.Name -like 'ssh-*' } | Select-Object -First 1 -ExpandProperty Name"]
-            ssh_auth_socket = subprocess.check_output(socket_cmd, text=True).strip()
-            # On Windows, set this to the running agent pipe
-            os.environ["SSH_AUTH_SOCK"] = fr"\\.\pipe\ssh-{ssh_auth_socket}"
+            pass
 
         result = subprocess.run(cmd, cwd=cwd, check=False, text=True, env=os.environ, stdout=sys.stdout, stderr=sys.stderr)
         # print commands printed from the current working directory 
