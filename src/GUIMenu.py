@@ -52,8 +52,7 @@ class GUIMenu:
         content = f"{padding_str}{line}{padding_str}"
         
         # get content len without ascii
-        actual_line_length = len(re.sub(r'\033\[[0-9;]*m|\033]8;;.*?\033\\'
-, '', content))
+        actual_line_length = len(re.sub(r'\033\[[0-9;]*m|\033]8;;.*?\033\\', '', content))
         whitespace = " "
         if content_width - actual_line_length >= 0:
             whitespace = " " * (content_width - actual_line_length) # whitespace to add for ljust
