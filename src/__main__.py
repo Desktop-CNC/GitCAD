@@ -292,7 +292,7 @@ def handle_ssh_auth(menu: GUIMenu):
 
     authorize_github_ssh = None
     if github_ssh_call.returncode == 255: # ssh access is not yet granted
-        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is neeeded to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}")
+        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is neeeded to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}") 
         print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
         # attempt to authorize the key
         authorize_github_ssh = subprocess.run(
