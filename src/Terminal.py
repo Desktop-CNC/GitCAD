@@ -74,13 +74,14 @@ def run_bash_cmd(cmd: list, cwd:path=None):
         shell = sys.platform.startswith("win") # only use shell on windows
         cmd_env = os.environ.copy() 
         
-        #cmd_env["GIT_SSH_COMMAND"] = "ssh -o BatchMode=yes"
-        result = subprocess.run(cmd, cwd=cwd, check=False, capture_output=True)#, shell=shell)#, env=cmd_env)
+        
+        cmd_env["GIT_SSH_COMMAND"] = "ssh -o BatchMode=yes"
+        result = subprocess.run(cmd, cwd=cwd, check=False, capture_output=True, shell=shell, env=cmd_env)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset 
         # get name from cwd directory and pop off the end     
         repo_name = cwd.__str__().split(slash()).pop() 
-        cmd_str = " ".join(result.args) # get list of args  
+        cmd_str = " ".join(result.args) # get list of args 
         # format cwd and command line args to show the bash command
         print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
         if result.returncode == 128: # print error message if a fatal 128 git returncode is found
