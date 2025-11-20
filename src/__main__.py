@@ -276,6 +276,7 @@ def handle_bypass_ssh_auth(menu: GUIMenu):
     menu.exit()
 
 def handle_ssh_auth(menu: GUIMenu):
+    
     ssh_key = find_ssh_key()
     if ssh_key[0].name == "id_ed25519":
         ssh_key = ssh_key[0]
@@ -284,7 +285,8 @@ def handle_ssh_auth(menu: GUIMenu):
         menu.exit()
         return
    
-    # evaluate github ssh access
+    # evaluate github ssh access; this checks for authorizations but does not grant it. 
+    # only linux OS will allow granting authorization at this stage (other OS will not)
     github_ssh_status = subprocess.run(
         ["ssh", "-o", "BatchMode=yes", "-T", "git@github.com"],
         stdin=sys.stdin, stdout=sys.stdout,
@@ -292,9 +294,10 @@ def handle_ssh_auth(menu: GUIMenu):
         check=False
     )
 
-    authorize_github_ssh = None
-    if github_ssh_status.returncode == 255: # ssh access is not yet granted
-        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is neeeded to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}") 
+    authorize_github_ssh = None # authorize ssh key if not already and the check above said authorization is not yet given
+    # if this is a linux OS, then the chance to allow authentication was the stage above; in this case, skip this stage below
+    if sys.platform.startswith("win") and github_ssh_status.returncode == 255: # ssh access is not yet granted (run on non-linux only)
+        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is needed to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}") 
         print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
         
         # attempt to authorize the key
@@ -305,19 +308,26 @@ def handle_ssh_auth(menu: GUIMenu):
             check=False
         )
 
+    # check for signs of failed authentication 
+    failed_win_auth = authorize_github_ssh is not None and authorize_github_ssh.returncode != 0 # failed to auth on authorizing github ssh with returncode not 0
+    failed_linux_auth = github_ssh_status.returncode == 255 # failed to auth on checking stats with returncode 255
+    # check for signs of successful authentication (this may be mutually exclusive and succeeding true implies failed is false, but outlining criteria for failure and success separately is still important)
+    succeeded_win_auth = (authorize_github_ssh is None or authorize_github_ssh.returncode == 0) # succeeded auth on status or authorizing github ssh succeeded with returncode 0
+    succeeded_linux_auth = (authorize_github_ssh is None and github_ssh_status.returncode != 255) # authorize github ssh should not be used, but the status check cannot fail with returncode 255
+
     # authorize var should be none if it wasn't needed (ssh access already granted)
-    if authorize_github_ssh is not None and authorize_github_ssh.returncode != 0: # failed to authenticate
+    if (sys.platform.startswith("win") and failed_win_auth) or (sys.platform.startswith("linux") and failed_linux_auth): # failed to authenticate 
         print(f"{Terminal.Text.RED}\nLooks like authentication failed.{Terminal.Text.BOLD} (or you didn't give an SSH Key){Terminal.Text.END} \nUnderstand secure access to GitHub is limited without a key.{Terminal.Text.RESET}")
         input(f"{Terminal.Text.BOLD}{Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")  
         Terminal.Screen.clear_screen() 
         menu.exit()
         return
-    elif authorize_github_ssh is None or authorize_github_ssh.returncode == 0: # auth succeeded
+    elif (sys.platform.startswith("win") and succeeded_win_auth) or (sys.platform.startswith("linux") and succeeded_linux_auth): # auth succeeded
         input(f"{Terminal.Text.BOLD}{Terminal.Text.GREEN}Authentication Complete! {Terminal.Text.YELLOW}Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
         Terminal.Screen.clear_screen()
         menu.exit()
         return
-   
+    # report a warning if OS is not recognized or failed unexpectedly when authorizing
     input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: Authentication proceeded with unknown status!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
     menu.exit()
     return
