@@ -366,7 +366,7 @@ def __main__():
     auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_bypass_ssh_auth, lambda: auth_menu)
     auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the auth menu
-    auth_menu.run()
+    # auth_menu.run()
     # create the main menu
     main_menu = GUIMenu(title_text="Welcome to GitCAD.", subtitle_text="What would you like to do? Use arrow keys to navigate.")
     main_menu.add_option("Clone a new repository from GitHub", handle_clone_repository, Handler.handle_github_current_working_directory)
