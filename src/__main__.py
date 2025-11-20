@@ -3,6 +3,8 @@ from pathlib import Path as path
 import Terminal
 import Handler
 import subprocess
+import threading
+import time
 import sys
 import os
 
@@ -283,7 +285,7 @@ def handle_ssh_auth(menu: GUIMenu):
         return
    
     # evaluate github ssh access
-    github_ssh_call = subprocess.run(
+    github_ssh_status = subprocess.run(
         ["ssh", "-o", "BatchMode=yes", "-T", "git@github.com"],
         stdin=sys.stdin, stdout=sys.stdout,
         env=os.environ,
@@ -291,9 +293,10 @@ def handle_ssh_auth(menu: GUIMenu):
     )
 
     authorize_github_ssh = None
-    if github_ssh_call.returncode == 255: # ssh access is not yet granted
+    if github_ssh_status.returncode == 255: # ssh access is not yet granted
         print(f"\n{Terminal.Text.BOLD}{Terminal.Text.YELLOW}A passphrase is neeeded to authenticate. {Terminal.Text.BLUE}You CANNOT see it as you type!{Terminal.Text.RESET}") 
         print(f"\n{Terminal.Text.CYAN}When giving a passphrase, you get TWO attempts before authentication fails.{Terminal.Text.RESET}")
+        
         # attempt to authorize the key
         authorize_github_ssh = subprocess.run(
             ["ssh-add", f"{ssh_key}"],
@@ -314,6 +317,7 @@ def handle_ssh_auth(menu: GUIMenu):
         Terminal.Screen.clear_screen()
         menu.exit()
         return
+   
     input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: Authentication proceeded with unknown status!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
     menu.exit()
     return
