@@ -80,11 +80,12 @@ def run_bash_cmd(cmd: list, cwd:path=None):
         # format cwd and command line args to show the bash command
         print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
         if result.returncode == 128: # print error message if a fatal 128 git returncode is found
-            print(f"    {margin}{Terminal.Terminal.Text.BOLD}{Terminal.Text.RED}Error: {result.stderr}{Terminal.Text.RESET}")
+            print(f"    {margin}{Terminal.Text.BOLD}{Terminal.Text.RED}Error: {result.stderr.decode()}{Terminal.Text.RESET}")
+            return None
         # return results
         return result
     except Exception as e:
-        print(f" ERROR : {e}")
+        print(f"    {margin}{Terminal.Text.BOLD}{Terminal.Text.RED}Caught exception error: {e}{Terminal.Text.RESET}")
     return None
 
 def slash():
