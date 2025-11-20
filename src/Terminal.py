@@ -73,7 +73,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
     try:
         shell = sys.platform.startswith("win") # only use shell on windows
         cmd_env = os.environ.copy() 
-        print(f"sock: {cmd_env.get('SSH_AUTH_SOCK')}")
+        cmd_env["GIT_SSH_COMMAND"] = "ssh -o BatchMode=yes"
         result = subprocess.run(cmd, cwd=cwd, check=False, capture_output=True, shell=shell, env=cmd_env)
         # print commands printed from the current working directory 
         margin = " "*4 # margin for offset 
