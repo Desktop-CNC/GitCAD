@@ -54,6 +54,7 @@ class Text:
     END = '\033[0m'
     GREY = '\033[37m'
     RED = '\033[31m'
+    ORANGE = '\033[38;5;214m'
     GREEN = '\033[32m'
     BLUE = '\033[34m'
     CYAN = '\033[36m'
@@ -80,13 +81,13 @@ def run_bash_cmd(cmd: list, cwd:path=None):
         # format cwd and command line args to show the bash command
         print(f"{margin}{Terminal.Text.BOLD}{Terminal.Text.YELLOW}{cwd}{slash()}{Terminal.Text.BLUE}{repo_name}>{Terminal.Text.RESET} {cmd_str}")
         if result.returncode == 128: # print error message if a fatal 128 git returncode is found
-            err_msg = result.stderr.decode().replace("\n", "")
-            print(f"    {margin}{Terminal.Text.GREY}Error: {err_msg}{Terminal.Text.RESET}")
+            err_msg = result.stderr.decode().replace("\n", " ")
+            print(f"    {margin}{Terminal.Text.ORANGE}Error: {err_msg}{Terminal.Text.RESET}")
             raise Exception
         # return results
         return result
     except Exception as e:
-        print(f"    {margin}{Terminal.Text.GREY}Caught exception error: {e}{Terminal.Text.RESET}")
+        print(f"    {margin}{Terminal.Text.ORANGE}Caught exception error: {e}{Terminal.Text.RESET}")
         raise Exception
 
 def slash():
