@@ -344,7 +344,7 @@ def find_ssh_key():
     alt_key_dirs = list(ssh_dir.glob("id_*"))
     alt_key_dirs = [key for key in alt_key_dirs if not key.name.endswith(".pub")] # ignore .pub
     return alt_key_dirs
-
+ 
 # Building an EXE notes:
 # This can be done with pyinstaller on the cmd line:
 # EX: pyinstaller --onefile __main__.py --copy-metadata readchar
