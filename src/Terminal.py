@@ -74,7 +74,7 @@ def run_bash_cmd(cmd: list, cwd:path=None):
         shell = sys.platform.startswith("win") # only use shell on windows
         result = subprocess.run(cmd, cwd=cwd, check=False, capture_output=True, shell=shell, env=os.environ.copy())
         # print commands printed from the current working directory 
-        margin = " "*4 # margin for offset
+        margin = " "*4 # margin for offset 
         # get name from cwd directory and pop off the end     
         repo_name = cwd.__str__().split(slash()).pop() 
         cmd_str = " ".join(result.args) # get list of args 
