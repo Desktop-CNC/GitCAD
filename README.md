@@ -15,8 +15,8 @@ A **dependency** is a repository that is needed for another parent repository. T
 
 ## Available Distributions:
 _GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/executables`)
-- <a href="./executables/GitCAD_Linux"><strong>GitCAD_Linux</strong></a>
-- <a href="./executables/GitCAD_Win64.exe"><strong>GitCAD_Win64.exe</strong></a>
+- <a href="./executables/GitCAD_Linux_v1.2"><strong>GitCAD_Linux</strong></a>
+- <a href="./executables/GitCAD_Win64_v1.3.exe"><strong>GitCAD_Win64.exe</strong></a>
 
 ## How It Works:
 ### Overview:
@@ -57,15 +57,3 @@ The dependency will have more than one version. Especially since it also is a re
 **If Enclosure v1.5** repository has a dependency of **STD CAD**. This dependency is on version v1.1. Then it gets an update and becomes v1.2, the **Enclosure v1.5** still has **STD CAD v1.1** **, and NOT the new version v1.2** Under **Enclosure v1.5** you can **Set dependencies latest versions available** on the _GitCAD_ main menu. This will set the dependency from **v1.1** to **v1.2** so **Enclosure v1.5** has **STD CAD v1.2** and gets the update. 
 
 You can either restore the dependency of a repository to the current version or it can be updated to a later version if there is one on GitHub. 
-
-### Viewing Repositories:
-For most things you can do with _GitCAD_, you are needing to choose a repository. (i.e. choosing a repository to pull) For most of these choices on the main menu, click them will load a new menu with a prompt. **A repository must be cloned to your computer to use it in any way**. This is because _GitCAD_ only loads repositories found in your `/Documents/GitHub` folder on your computer. 
-<div>
-    <img style="width: 75%" alt="GitCAD Pulling Repo Menu" src="./assets/GitCAD_deps_ex.png">
-</div>
-
-In addition to loading all repositories in the `Documents/GitHub` folder, you can also view which repositories are dependencies of another. **All repositories will look like: `"NAME"` `> deps [dep1, dep2, ...]`. If the repository has dependendencies, they will also be listed (i.e. dep1, dep2, ...).**
-
-In the image above, you can see `Enclosure` and `Main` are listed repositories both have dependencies. `Main` has dependencies of: `Enclosure`, and `StandardCAD`. 
-
-Also, `Enclosure`, as its own repository has `StandardCAD` also as a dependency in the same way `Main` does. If a repository has no dependencies, none will be listed after its name. For example, `GitCAD` in the image above has no dependencies. 
