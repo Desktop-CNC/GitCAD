@@ -16,7 +16,7 @@ A **dependency** is a repository that is needed by another parent repository. Th
 ## Available Downloads:
 _GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/downloads`)
 - <a href="./downloads/GitCAD_Linux_v1.2"><strong>GitCAD_Linux v1.2</strong></a>
-- <a href="./downloads/GitCAD_Win64_v1.4.exe"><strong>GitCAD_Win64.exe v1.4</strong></a>
+- <a href="./downloads/GitCAD_Win64_v1.5.exe"><strong>GitCAD_Win64.exe v1.5</strong></a>
 
 ## Setting up GitCAD:
 ### Install Git:

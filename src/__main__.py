@@ -373,6 +373,14 @@ def handle_keygen(menu: GUIMenu):
     result = subprocess.run(["ssh-keygen", "-t", "ed25519", "-C", ssh_key_name], 
                     cwd=ssh_key_root, stdin=sys.stdin, env=os.environ, check=False)
     
+    ssh_key = find_ssh_key() # find the actual name of existing key
+    if ssh_key[0].name == "id_ed25519": # only use id_ed25519 key 
+        ssh_key = ssh_key[0]
+    else: # ignore all other keys; notify user
+        input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: expected ssh key id_ed25519 but could not find it!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
+        menu.exit()
+        return
+
     # prompt with results of keygen
     Terminal.Screen.clear_screen()
     if result.returncode == 0:
@@ -383,10 +391,10 @@ def handle_keygen(menu: GUIMenu):
         print(f"(1) Let the name be whatever you want. \n(2) Let key type be \'Authentication Key\'. \n(3){Terminal.Text.BOLD}{Terminal.Text.ORANGE} In key text box, paste the following:{Terminal.Text.RESET}")
 
         if sys.platform.startswith("win"): # read .pub file content for windows
-            subprocess.run(["powershell", "Get-Content", f"{ssh_key_name}.pub"],
+            subprocess.run(["powershell", "Get-Content", f"{ssh_key}.pub"],
                             cwd=ssh_key_root, stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)
         else: # read .pub file content for linux / other OS
-            subprocess.run(["cat", f"{ssh_key_name}.pub"], 
+            subprocess.run(["cat", f"{ssh_key}.pub"], 
                            cwd=ssh_key_root, stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)
         
         print(f"\nOnce {Terminal.Text.BOLD}{Terminal.Text.UNDERLINE}COPIED and PASTED{Terminal.Text.RESET} the key code above into GitHub, you can continue.")
