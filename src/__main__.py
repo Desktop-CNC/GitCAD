@@ -267,20 +267,30 @@ def handle_update_to_latest_dependencies(cwd: str):
     Terminal.Screen.clear_screen()
 
 def handle_exit():
+    """
+    Exits the entire program.
+    """
     margin = " " * GUIMenu.MENU_ORIGIN[0]
     print(f"\n {margin}exiting program...")
     exit(0)
 
-def handle_bypass_ssh_auth(menu: GUIMenu):
+def handle_close_menu(menu: GUIMenu):
+    """
+    Exits a given menu and clears the screen.
+    param: menu [GUIMenu] The menu to exit
+    """
     Terminal.Screen.clear_screen()
     menu.exit()
 
 def handle_ssh_auth(menu: GUIMenu):
-    
-    ssh_key = find_ssh_key()
-    if ssh_key[0].name == "id_ed25519":
+    """
+    Authorize SSH Key with GitCAD program. This function is initiated by a menu. 
+    param: menu [GUIMenu] The menu
+    """
+    ssh_key = find_ssh_key() # find the name of existing key
+    if ssh_key[0].name == "id_ed25519": # only use id_ed25519 key 
         ssh_key = ssh_key[0]
-    else: 
+    else: # ignore all other keys; notify user
         input(f"{Terminal.Text.BOLD}{Terminal.Text.RED} warning: expected ssh key id_ed25519 but could not find it!{Terminal.Text.YELLOW} Press ENTER to continue to GitCAD.{Terminal.Text.RESET}")
         menu.exit()
         return
@@ -345,6 +355,60 @@ def find_ssh_key():
     alt_key_dirs = [key for key in alt_key_dirs if not key.name.endswith(".pub")] # ignore .pub
     return alt_key_dirs
  
+def handle_keygen(menu: GUIMenu):
+    """
+    Runs the keygen commands to create an SSH Key. This function is initiated from a menu. 
+    param: menu [GUIMenu] The menu
+    """
+    # prompt key generation input from user
+    print(f"{Terminal.Text.BLUE}Now you will be asked for: (1) an email, (2) the name of the file to save the key to, \nand (3) a key passphrase/password{Terminal.Text.RESET}")
+    print(f"{Terminal.Text.ORANGE}When you see: 'Enter file in which to save the key...', ignore and SKIP this. Just press {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END}{Terminal.Text.ORANGE} to skip.{Terminal.Text.RESET}")
+
+    # make/find .ssh folder/root
+    home = os.path.expanduser("~")
+    ssh_key_root = os.path.join(home, ".ssh")
+    os.makedirs(ssh_key_root, exist_ok=True)
+    ssh_key_name = input("Please enter your GitHub email: ")
+    # initiate keygen with provided GitHub email
+    result = subprocess.run(["ssh-keygen", "-t", "ed25519", "-C", ssh_key_name], 
+                    cwd=ssh_key_root, stdin=sys.stdin, env=os.environ, check=False)
+    
+    # prompt with results of keygen
+    Terminal.Screen.clear_screen()
+    if result.returncode == 0:
+        # prompt successful key generation; prompt for user to put key on GitHub account
+        print(f"{Terminal.Text.GREEN}Successfuly created SSH Key.{Terminal.Text.END}")
+        print(f"{Terminal.Text.BOLD}{Terminal.Text.BLUE}You need to upload this key to your GitHub account.{Terminal.Text.END} To do this, {Terminal.Text.YELLOW}go to GitHub and click:{Terminal.Text.RESET} \n(1) Account Settings \n(2) SSH and GPG Keys \n(3) New SSH key{Terminal.Text.END}")
+        print(f"\n{Terminal.Text.BOLD}{Terminal.Text.BLUE}Now at {Terminal.Text.YELLOW}Add new SSH Key{Terminal.Text.BLUE} GitHub webpage:{Terminal.Text.RESET}")
+        print(f"(1) Let the name be whatever you want. \n(2) Let key type be \'Authentication Key\'. \n(3){Terminal.Text.BOLD}{Terminal.Text.ORANGE} In key text box, paste the following:{Terminal.Text.RESET}")
+
+        if sys.platform.startswith("win"): # read .pub file content for windows
+            subprocess.run(["powershell", "Get-Content", f"{ssh_key_name}.pub"],
+                            cwd=ssh_key_root, stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)
+        else: # read .pub file content for linux / other OS
+            subprocess.run(["cat", f"{ssh_key_name}.pub"], 
+                           cwd=ssh_key_root, stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)
+        
+        print(f"\nOnce {Terminal.Text.BOLD}{Terminal.Text.UNDERLINE}COPIED and PASTED{Terminal.Text.RESET} the key code above into GitHub, you can continue.")
+        time.sleep(3) # brief delay to stop user for not reading the key .pub file content
+    else: # failed to make key
+        print(f"{Terminal.Text.RED}Failed to create SSH Key.{Terminal.Text.END}")
+    # exit keygen menu
+    input(f"Press {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
+    Terminal.Screen.clear_line()
+    menu.exit()
+
+def handle_create_ssh_key():
+    """
+    Runs the menu to create an SSH Key. Generating a key will give neccessary prompts and output needed info for GitHub setup. 
+    """
+    # run key generation menu
+    keygen_menu = GUIMenu(title_text=f"Would you like to {Terminal.Text.YELLOW}create an SSH Key?",
+                          subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
+    keygen_menu.add_option("Yes. Generate a key.", handle_keygen, lambda: keygen_menu)
+    keygen_menu.add_option("No. Skip this.", handle_close_menu, lambda: keygen_menu)
+    keygen_menu.run()
+
 # Building an EXE notes:
 # This can be done with pyinstaller on the cmd line:
 # EX: pyinstaller --onefile __main__.py --copy-metadata readchar
@@ -354,7 +418,7 @@ def find_ssh_key():
 
 def __main__():
 
-    # test SSH tty authorization
+    # init program
     Terminal.Screen.clear_screen()
     ssh_url = "https://docs.github.com/en/authentication/connecting-to-github-with-ssh/about-ssh"
     ssh_link = f"\033]8;;{ssh_url}\033\\SSH Key\033]8;;\033\\"
@@ -362,8 +426,9 @@ def __main__():
     # create ssh auth menu
     auth_menu = GUIMenu(title_text=f"Welcome to GitCAD. {Terminal.Text.YELLOW}Would you like to use a GitHub SSH key?", 
                         subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
-    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_ssh_auth, lambda: auth_menu)
-    auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_bypass_ssh_auth, lambda: auth_menu)
+    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_close_menu, lambda: auth_menu)
+    auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_close_menu, lambda: auth_menu)
+    auth_menu.add_option(f"{Terminal.Text.ORANGE}Select here to make an SSH Key{Terminal.Text.END}", handle_create_ssh_key, None)
     auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the auth menu
     auth_menu.run() 

@@ -1,24 +1,36 @@
 # GitCAD 
-GitCAD is a tool that will manage GitHub CAD repositories on a local machine and allow a user to import one CAD repository into another. This allows CAD assemblies to be developed on independent repositories while keeping assemblies connected across repositories.  
+GitCAD is a tool that will manage GitHub CAD repositories and allow a user to import one CAD repository into another. This allows CAD assemblies to be developed on independent repositories while keeping assemblies connected across repositories.  
 
 ## Overview 
-_GitCAD_ is an application that makes uploading (pushing) changes and downloading (pulling) changes from a repository easier. There are tools that do this already, such as _GitHub Desktop_. However, **_GitCAD_** allows for **declaring repositories has dependencies of another.** 
+_GitCAD_ is an application that makes uploading (pushing) changes and downloading (pulling) changes from a repository easier. There are tools that do this already. However, **_GitCAD_** allows for **declaring repositories has dependencies of another.** 
 
 _GitCAD_ allows you to create separate CAD assemblies in different repositories to keep them independent. This is useful for keeping CAD documentation modular. Dependencies essentially serve as CAD sub-assemblies that are stored independently. 
 
 ## Benefits
-Any CAD project or assembly can be made of many other assemblies; typically known as sub-assemblies. Should these all exist in one single repository, only one developer can make changes to that repository at a time. Otherwise, many developers will overwrite each other's work, or merge conflicts between changes made by different developers will arise. Merge conflicts can be handled for debugging software, but debugging raw CAD files is not practical. 
+Any CAD project stored in one repository mean only one person can make changes and work on it at a time. This is because if many people work on that repository in only one shared branch, they will overwrite each other's work. This can also lead to conflict merging the different versions from each person. Merge conflicts can be handled for software, but debugging raw CAD files is not practical. 
 
-For these reasons, merge conflicts should be avoided entirely and so should having more than one developer working on a CAD repository at a time.
+For these reasons, merge conflicts should be avoided entirely for CAD, and so should having more than one developer working on a CAD repository at a time.
 
-A **dependency** is a repository that is needed for another parent repository. This allows on one repository to depend and and import another. When resolving conflicting changes and merge conflicts should be avoided, the work across a larger project can be split across many repositories that have dependencies to others. 
+A **dependency** is a repository that is needed by another parent repository. This allows on one repository to depend and and import another. This strategy allows many people to work on separate repositories to avoid merge conflicts while still keeping each repository, and the project, connected. 
 
-## Available Distributions:
+## Available Downloads:
 _GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/executables`)
-- <a href="./executables/GitCAD_Linux_v1.2"><strong>GitCAD_Linux</strong></a>
-- <a href="./executables/GitCAD_Win64_v1.3.exe"><strong>GitCAD_Win64.exe</strong></a>
+- <a href="./executables/GitCAD_Linux_v1.2"><strong>GitCAD_Linux v1.2</strong></a>
+- <a href="./executables/GitCAD_Win64_v1.3.exe"><strong>GitCAD_Win64.exe v1.3</strong></a>
 
-## How It Works:
+## Setting up GitCAD:
+### Install Git:
+Git is a tool that allows your computer talk to and communicate with GitHub. This is required to run GitCAD. You can install Git from here: https://git-scm.com/install/
+### Enable Windows to Use SSH Agent:
+This step is only needed for running on Windows. Windows has a tool that will manage your SSH key for you, and it is needed to allow GitCAD to authenticate your SSH key. You can **open Windows PowerShell as ADMINISTRATOR** and run the following commands: 
+```bash
+sc.exe config ssh-agent start=auto 
+Start-Service ssh-agent 
+git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
+```
+### 
+
+## How To Use GitCAD:
 ### Overview:
 The app is a menu that is navigated with `UP`/`DOWN` **arrow keys** and by selecting `ENTER`. **The program allows you to do the following:**
 - Clone / Push / Pull Repositories 
