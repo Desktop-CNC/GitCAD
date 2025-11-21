@@ -434,7 +434,7 @@ def __main__():
     # create ssh auth menu
     auth_menu = GUIMenu(title_text=f"Welcome to GitCAD. {Terminal.Text.YELLOW}Would you like to use a GitHub SSH key?", 
                         subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
-    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_close_menu, lambda: auth_menu)
+    auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_ssh_auth, lambda: auth_menu)
     auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_close_menu, lambda: auth_menu)
     auth_menu.add_option(f"{Terminal.Text.ORANGE}Select here to make an SSH Key{Terminal.Text.END}", handle_create_ssh_key, None)
     auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
