@@ -421,15 +421,12 @@ def handle_activate_ssh_key():
     """
     Will activate and initialize an SSH Key that has not yet been reconized by GitHub. This must be done to a key just added to GitHub.
     """
-    # run activation command
-    result = subprocess.run(["ssh", "-T", "git@github.com"],
-                    stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)  
-    if result.returncode != 255: # handle results
-        print(f"{Terminal.Text.GREEN}Successfully activated SSH Key.{Terminal.Text.END}")
-    else: 
-        print(f"{Terminal.Text.RED}Failed activated SSH Key.{Terminal.Text.END}")
-    # return to auth menu
-    input(f"Press {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
+    # prompt user with what to do
+    print(f"{Terminal.Text.CYAN}Hey, you need to activate your new key.{Terminal.Text.RESET}")
+    print(f"{Terminal.Text.CYAN}Do this by opening a {Terminal.Text.BOLD}{Terminal.Text.ORANGE}Command Prompt{Terminal.Text.RESET}{Terminal.Text.CYAN}, and funning the command: ")
+    print(f"{Terminal.Text.BOLD}{Terminal.Text.ORANGE}ssh -T git@github.com{Terminal.Text.RESET}")
+    # prompt exit
+    input(f"\nPress {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
     Terminal.Screen.clear_screen()
 
 # Building an EXE notes:
