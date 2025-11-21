@@ -38,19 +38,7 @@
  [('__main__',
    'C:\\Users\\matthew-papesh\\Documents\\GitHub\\GitCAD\\src\\__main__.py',
    'PYSOURCE')],
- [('_py_abc',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_py_abc.py',
-   'PYMODULE'),
-  ('typing',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\typing.py',
-   'PYMODULE'),
-  ('contextlib',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\contextlib.py',
-   'PYMODULE'),
-  ('copy',
+ [('copy',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\copy.py',
    'PYMODULE'),
@@ -278,6 +266,10 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\csv.py',
    'PYMODULE'),
+  ('contextlib',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\contextlib.py',
+   'PYMODULE'),
   ('importlib.util',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\importlib\\util.py',
@@ -310,13 +302,21 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\token.py',
    'PYMODULE'),
-  ('stringprep',
+  ('_py_abc',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\stringprep.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_py_abc.py',
    'PYMODULE'),
   ('tracemalloc',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\tracemalloc.py',
+   'PYMODULE'),
+  ('stringprep',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\stringprep.py',
+   'PYMODULE'),
+  ('typing',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\typing.py',
    'PYMODULE'),
   ('threading',
    'C:\\Program '
@@ -430,81 +430,49 @@
   ('base_library.zip',
    'C:\\Users\\matthew-papesh\\Documents\\GitHub\\GitCAD\\build\\__main__\\base_library.zip',
    'DATA')],
- [('posixpath',
+ [('sre_compile',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\posixpath.py',
-   'PYMODULE'),
-  ('heapq',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\heapq.py',
-   'PYMODULE'),
-  ('re',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\re.py',
-   'PYMODULE'),
-  ('_bootlocale',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_bootlocale.py',
-   'PYMODULE'),
-  ('sre_parse',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_parse.py',
-   'PYMODULE'),
-  ('keyword',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\keyword.py',
-   'PYMODULE'),
-  ('enum',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\enum.py',
-   'PYMODULE'),
-  ('stat',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\stat.py',
-   'PYMODULE'),
-  ('abc',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\abc.py',
-   'PYMODULE'),
-  ('functools',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\functools.py',
-   'PYMODULE'),
-  ('_weakrefset',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_weakrefset.py',
-   'PYMODULE'),
-  ('sre_constants',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_constants.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_compile.py',
    'PYMODULE'),
   ('codecs',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\codecs.py',
    'PYMODULE'),
+  ('_weakrefset',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_weakrefset.py',
+   'PYMODULE'),
   ('linecache',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\linecache.py',
+   'PYMODULE'),
+  ('re',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\re.py',
    'PYMODULE'),
   ('operator',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\operator.py',
    'PYMODULE'),
-  ('sre_compile',
+  ('copyreg',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_compile.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\copyreg.py',
    'PYMODULE'),
-  ('collections.abc',
+  ('enum',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\collections\\abc.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\enum.py',
    'PYMODULE'),
-  ('collections',
+  ('traceback',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\collections\\__init__.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\traceback.py',
    'PYMODULE'),
-  ('genericpath',
+  ('keyword',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\genericpath.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\keyword.py',
+   'PYMODULE'),
+  ('abc',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\abc.py',
    'PYMODULE'),
   ('reprlib',
    'C:\\Program '
@@ -514,25 +482,33 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_collections_abc.py',
    'PYMODULE'),
-  ('types',
+  ('genericpath',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\types.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\genericpath.py',
+   'PYMODULE'),
+  ('stat',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\stat.py',
+   'PYMODULE'),
+  ('ntpath',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\ntpath.py',
+   'PYMODULE'),
+  ('warnings',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\warnings.py',
+   'PYMODULE'),
+  ('_bootlocale',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\_bootlocale.py',
    'PYMODULE'),
   ('io',
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\io.py',
    'PYMODULE'),
-  ('locale',
+  ('weakref',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\locale.py',
-   'PYMODULE'),
-  ('copyreg',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\copyreg.py',
-   'PYMODULE'),
-  ('traceback',
-   'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\traceback.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\weakref.py',
    'PYMODULE'),
   ('encodings.zlib_codec',
    'C:\\Program '
@@ -1026,17 +1002,41 @@
    'C:\\Program '
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\encodings\\__init__.py',
    'PYMODULE'),
-  ('weakref',
+  ('sre_parse',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\weakref.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_parse.py',
    'PYMODULE'),
-  ('warnings',
+  ('heapq',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\warnings.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\heapq.py',
    'PYMODULE'),
-  ('ntpath',
+  ('posixpath',
    'C:\\Program '
-   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\ntpath.py',
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\posixpath.py',
+   'PYMODULE'),
+  ('functools',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\functools.py',
+   'PYMODULE'),
+  ('locale',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\locale.py',
+   'PYMODULE'),
+  ('collections.abc',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\collections\\abc.py',
+   'PYMODULE'),
+  ('collections',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\collections\\__init__.py',
+   'PYMODULE'),
+  ('sre_constants',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\sre_constants.py',
+   'PYMODULE'),
+  ('types',
+   'C:\\Program '
+   'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_3.8.2800.0_x64__qbz5n2kfra8p0\\lib\\types.py',
    'PYMODULE'),
   ('os',
    'C:\\Program '

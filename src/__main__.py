@@ -385,7 +385,7 @@ def handle_keygen(menu: GUIMenu):
     Terminal.Screen.clear_screen()
     if result.returncode == 0:
         # prompt successful key generation; prompt for user to put key on GitHub account
-        print(f"{Terminal.Text.GREEN}Successfuly created SSH Key.{Terminal.Text.END}")
+        print(f"{Terminal.Text.GREEN}Successfully created SSH Key.{Terminal.Text.END}")
         print(f"{Terminal.Text.BOLD}{Terminal.Text.BLUE}You need to upload this key to your GitHub account.{Terminal.Text.END} To do this, {Terminal.Text.YELLOW}go to GitHub and click:{Terminal.Text.RESET} \n(1) Account Settings \n(2) SSH and GPG Keys \n(3) New SSH key{Terminal.Text.END}")
         print(f"\n{Terminal.Text.BOLD}{Terminal.Text.BLUE}Now at {Terminal.Text.YELLOW}Add new SSH Key{Terminal.Text.BLUE} GitHub webpage:{Terminal.Text.RESET}")
         print(f"(1) Let the name be whatever you want. \n(2) Let key type be \'Authentication Key\'. \n(3){Terminal.Text.BOLD}{Terminal.Text.ORANGE} In key text box, paste the following:{Terminal.Text.RESET}")
@@ -403,7 +403,7 @@ def handle_keygen(menu: GUIMenu):
         print(f"{Terminal.Text.RED}Failed to create SSH Key.{Terminal.Text.END}")
     # exit keygen menu
     input(f"Press {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
-    Terminal.Screen.clear_line()
+    Terminal.Screen.clear_screen()
     menu.exit()
 
 def handle_create_ssh_key():
@@ -416,6 +416,21 @@ def handle_create_ssh_key():
     keygen_menu.add_option("Yes. Generate a key.", handle_keygen, lambda: keygen_menu)
     keygen_menu.add_option("No. Skip this.", handle_close_menu, lambda: keygen_menu)
     keygen_menu.run()
+
+def handle_activate_ssh_key():
+    """
+    Will activate and initialize an SSH Key that has not yet been reconized by GitHub. This must be done to a key just added to GitHub.
+    """
+    # run activation command
+    result = subprocess.run(["ssh", "-T", "git@github.com"],
+                    stdin=sys.stdin, stdout=sys.stdout, env=os.environ, check=False)  
+    if result.returncode != 255: # handle results
+        print(f"{Terminal.Text.GREEN}Successfully activated SSH Key.{Terminal.Text.END}")
+    else: 
+        print(f"{Terminal.Text.RED}Failed activated SSH Key.{Terminal.Text.END}")
+    # return to auth menu
+    input(f"Press {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
+    Terminal.Screen.clear_screen()
 
 # Building an EXE notes:
 # This can be done with pyinstaller on the cmd line:
@@ -436,6 +451,7 @@ def __main__():
                         subtitle_text="SSH keys allow secure GitHub Account access. Use arrow/ENTER keys.")
     auth_menu.add_option(f"Yes. Let's authorize my {Terminal.Text.CYAN}{ssh_link}{Terminal.Text.END}.", handle_ssh_auth, lambda: auth_menu)
     auth_menu.add_option("No. (This may limit GitCAD's access to GitHub)", handle_close_menu, lambda: auth_menu)
+    auth_menu.add_option(f"{Terminal.Text.ORANGE}Select here activate a new key SSH Key{Terminal.Text.END}", handle_activate_ssh_key)
     auth_menu.add_option(f"{Terminal.Text.ORANGE}Select here to make an SSH Key{Terminal.Text.END}", handle_create_ssh_key, None)
     auth_menu.add_option(f"{Terminal.Text.YELLOW}<EXIT>{Terminal.Text.END}", handle_exit)
     # run the auth menu
