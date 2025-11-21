@@ -88,8 +88,8 @@ def run_bash_cmd(cmd: list, cwd:path=None):
         return result
     except Exception as e:
         if e.__str__() != "": # only catch something to print if there is a message
-            print(f"    {margin}{Terminal.Text.ORANGE}Caught exception error: {e}{Terminal.Text.RESET}")
-        raise Exception
+            print(f"    {margin}{Terminal.Text.ORANGE}Caught exception error: {e.__str__()}{Terminal.Text.RESET}")
+        raise Exception # for higher lever exception handling
 
 def slash():
     """

@@ -16,7 +16,7 @@ A **dependency** is a repository that is needed by another parent repository. Th
 ## Available Downloads:
 _GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/downloads`)
 - <a href="./downloads/GitCAD_Linux_v1.2"><strong>GitCAD_Linux v1.2</strong></a>
-- <a href="./downloads/GitCAD_Win64_v1.7.exe"><strong>GitCAD_Win64.exe v1.7</strong></a>
+- <a href="./downloads/GitCAD_Win_v1.7.exe"><strong>GitCAD_Win v1.7 EXE</strong></a>
 
 ## Setting up GitCAD:
 ### Install Git:
@@ -77,7 +77,12 @@ Once cloned to the computer, pushing and pulling are the main ways to use your r
 A repository can have dependencies. A dependency is another repository. This allows a repository to include/import/depend on another. Looking at the _GitCAD_ main menu, a dependency can be added or deleted. Both actions will ask for two repositories, (1) the repo, and (2) the dependency. 
 
 ### Dependency Version Control: 
-A dependency is downloaded with the parent repository it belongs to as one whole package. All dependencies will exist in the repository folder under the `/deps` folder. You can **restore** a dependency to the current version on the parent repository. This is so that if you make changes to the dependency to test something, etc, on your computer, you can reset the dependency to its initial state. 
+All dependencies are downloaded in one package when downloading/cloning a repository. With this as the parent repository, the dependendent repositories can be found under the `/deps` folder. There are two major parts to dependencies and the version control below. 
+#### Restoring a Depdendency:
+If a dependency is modified by the parent repository, these changes were not committed to the actual depdendency repository. However, restoring will remove any of these local changes that may have been made to the dependency. This allows you to maintain the specific version of the dependency on your computer.
+#### Dependency Latest Availability:
+Although maintaining the specific version of a dependency can be done by restoring it as needed, this only resets the dependency to a set version. If this version is not the latest one available, that dependency can be set to this version. 
+
 
 The dependency will have more than one version. Especially since it also is a repository that also receives updates on GitHub. However, the version of the dependency connected to a parent repository does not change automatically. 
 

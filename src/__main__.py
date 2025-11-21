@@ -136,11 +136,11 @@ def handle_create_dependency(cwd: path):
         parent_repo_dir = cwd / path(parent_repo)
         dep_repo_dir = cwd / path(dep_repo)
         # get dependency repo url from bash
-        dep_repo_ssh_url = Terminal.run_bash_cmd(["git", "remote", "get-url", "origin"], cwd=str(dep_repo_dir)).stdout.strip()
+        dep_repo_ssh_url = Terminal.run_bash_cmd(["git", "remote", "get-url", "origin"], cwd=str(dep_repo_dir)).stdout.decode().strip()
 
         # add dependency repo by its url and push parent repo to github
-        Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd(["git", "commit", "-am", f"Created {dep_repo} as a submodule/dependency to {parent_repo}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "submodule", "add", dep_repo_ssh_url, f"{path('deps') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "commit", "-m", f"Created {dep_repo} as a submodule/dependency to {parent_repo}"], cwd=str(parent_repo_dir))
         Terminal.run_bash_cmd(["git", "push"], cwd=str(parent_repo_dir))
         input(f"\n{margin}{Terminal.Text.GREEN}Successfully created dependency and pushed it to GitHub.{Terminal.Text.RESET} Press enter to continue.\n")
     except:
@@ -195,8 +195,8 @@ def handle_delete_dependency(cwd: path):
         parent_repo_dir = cwd / path(parent_repo)
         # run dependency removal bash
         # remove submodule tracking
-        Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd(["git", "rm", "-f", f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "submodule", "deinit", "-f", f"{path('deps') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd(["git", "rm", "-f", f"{path('deps') / path(dep_repo)}"], cwd=str(parent_repo_dir))
     
         # get args based on os
         args = (None, None, None)
@@ -207,8 +207,8 @@ def handle_delete_dependency(cwd: path):
         elif sys.platform.startswith("darwin"):
             args = ("rm", "-rf", " ")
         # clean up metadata left over
-        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('.git') / path('modules') / path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
-        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('dep') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('.git') / path('modules') / path('deps') / path(dep_repo)}"], cwd=str(parent_repo_dir))
+        Terminal.run_bash_cmd([args[0], args[1], args[2], f"{path('deps') / path(dep_repo)}"], cwd=str(parent_repo_dir))
        
         # commit and push changes of removed dependency
         Terminal.run_bash_cmd(["git", "commit", "-m", f"Deleted submodule/dependency {dep_repo} from {parent_repo}"], cwd=str(parent_repo_dir))
@@ -252,7 +252,7 @@ def handle_update_to_latest_dependencies(cwd: str):
         bash_cmds=[
             # get latest versions of deps and push these changes to github 
             ["git", "submodule", "update", "--remote"],
-            ["git", "add", f"{path('dep') / path('*')}"],
+            ["git", "add", f"{path('deps') / path('*')}"],
             ["git", "commit", "-m", "Updated submodules/dependencies"],
             ["git", "push"],
             # pull content of latests versions of deps and do a hard-reset on local copies
@@ -423,7 +423,7 @@ def handle_activate_ssh_key():
     """
     # prompt user with what to do
     print(f"{Terminal.Text.CYAN}Hey, you need to activate your new key.{Terminal.Text.RESET}")
-    print(f"{Terminal.Text.CYAN}Do this by opening a {Terminal.Text.BOLD}{Terminal.Text.ORANGE}Command Prompt{Terminal.Text.RESET}{Terminal.Text.CYAN}, and funning the command: ")
+    print(f"{Terminal.Text.CYAN}Do this by opening a {Terminal.Text.BOLD}{Terminal.Text.ORANGE}Command Prompt{Terminal.Text.RESET}{Terminal.Text.CYAN}, and running the command: ")
     print(f"{Terminal.Text.BOLD}{Terminal.Text.ORANGE}ssh -T git@github.com{Terminal.Text.RESET}")
     # prompt exit
     input(f"\nPress {Terminal.Text.BOLD}{Terminal.Text.YELLOW}ENTER{Terminal.Text.END} to continue.")
