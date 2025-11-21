@@ -7,16 +7,16 @@ _GitCAD_ is an application that makes uploading (pushing) changes and downloadin
 _GitCAD_ allows you to create separate CAD assemblies in different repositories to keep them independent. This is useful for keeping CAD documentation modular. Dependencies essentially serve as CAD sub-assemblies that are stored independently. 
 
 ## Benefits
-Any CAD project stored in one repository mean only one person can make changes and work on it at a time. This is because if many people work on that repository in only one shared branch, they will overwrite each other's work. This can also lead to conflict merging the different versions from each person. Merge conflicts can be handled for software, but debugging raw CAD files is not practical. 
+Any CAD project stored in one repository means only one person can make changes and work on it at a time. This is because if many people work on that repository in only one shared branch, they will overwrite each other's work. This can also lead to conflicts merging the different versions from each person. Merge conflicts can be handled for software, but debugging raw CAD files is not practical. 
 
-For these reasons, merge conflicts should be avoided entirely for CAD, and so should having more than one developer working on a CAD repository at a time.
+For these reasons, merge conflicts should be avoided entirely for CAD, and so should having more than one person working on a CAD repository at a time.
 
-A **dependency** is a repository that is needed by another parent repository. This allows on one repository to depend and and import another. This strategy allows many people to work on separate repositories to avoid merge conflicts while still keeping each repository, and the project, connected. 
+A **dependency** is a repository that is needed by another parent repository. This allows on one repository to depend and and import another. This strategy allows many people to work on separate repositories to avoid merge conflicts, while still keeping each repository, and the project, connected. 
 
 ## Available Downloads:
-_GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/executables`)
-- <a href="./executables/GitCAD_Linux_v1.2"><strong>GitCAD_Linux v1.2</strong></a>
-- <a href="./executables/GitCAD_Win64_v1.3.exe"><strong>GitCAD_Win64.exe v1.3</strong></a>
+_GitCAD_ has been developed for both Linux and Windows systems. These can be found here: (can also be found in folder `/downloads`)
+- <a href="./downloads/GitCAD_Linux_v1.2"><strong>GitCAD_Linux v1.2</strong></a>
+- <a href="./downloads/GitCAD_Win64_v1.4.exe"><strong>GitCAD_Win64.exe v1.4</strong></a>
 
 ## Setting up GitCAD:
 ### Install Git:
@@ -28,7 +28,22 @@ sc.exe config ssh-agent start=auto
 Start-Service ssh-agent 
 git config --global core.sshCommand "C:/Windows/System32/OpenSSH/ssh.exe"
 ```
-### 
+### Creating an SSH Key:
+An SSH key can be created on your computer. This key will then be uploaded to your GitHub account under your account settings. After opening _GitCAD_, you will be prompted to authorize your SSH key with the program. You can see this below: 
+<div>
+    <img style="margin: 0 auto; width: 75%;" alt="Image of GitCAD SSH Authorization Menu" src="./assets/GitCAD_auth_menu.png">
+</div>
+
+Notice that **an SSH key can be made by GitCAD**. The SSH authorization menu will allow you to create an SSH key if you don't already have one. You can walk through that process if needed. **Making an SSH key only needs to be done once**. 
+
+Alternatively, you can make an SSH key without _GitCAD_. This can be done by following the tutorials here: 
+- Create an SSH Key: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+- Add an SSH Key to GitHub: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+
+### Using an SSH Key:
+Recalling the _GitCAD_ authorization menu in the image above, you can **authorize an SSH key for the program to use**. This can be done if there is an SSH key already existing. Some commands run by _GitCAD_ may need secure access to GitHub, and that is what SSH key is needed for.
+
+Authorizing an SSH key at the starting menu requires you to give the passphrase/password of the key. Doing this at the starting menu prevents _GitCAD_ from needing to ask you again. Otherwise, without authorization, _GitCAD_ may constantly ask and will not remember the SSH key. 
 
 ## How To Use GitCAD:
 ### Overview:
