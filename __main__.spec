@@ -6,7 +6,7 @@ datas += copy_metadata('readchar')
 
 
 a = Analysis(
-    ['src\\__main__.py'],
+    ['src/__main__.py'],
     pathex=[],
     binaries=[],
     datas=datas,
