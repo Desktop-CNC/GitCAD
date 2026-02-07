@@ -81,11 +81,5 @@ All dependencies are downloaded in one package when downloading/cloning a reposi
 #### Restoring a Depdendency:
 If a dependency is modified by the parent repository, these changes were not committed to the actual depdendency repository. However, restoring will remove any of these local changes that may have been made to the dependency. This allows you to maintain the specific version of the dependency on your computer.
 #### Dependency Latest Availability:
-Although maintaining the specific version of a dependency can be done by restoring it as needed, this only resets the dependency to a set version. If this version is not the latest one available, that dependency can be set to this version. 
+Although maintaining the specific version of a dependency can be done by restoring it as needed, this only resets the dependency to a set version. If this version is not the latest one available, that dependency can be set to the latest version. 
 
-
-The dependency will have more than one version. Especially since it also is a repository that also receives updates on GitHub. However, the version of the dependency connected to a parent repository does not change automatically. 
-
-**If Enclosure v1.5** repository has a dependency of **STD CAD**. This dependency is on version v1.1. Then it gets an update and becomes v1.2, the **Enclosure v1.5** still has **STD CAD v1.1** **, and NOT the new version v1.2** Under **Enclosure v1.5** you can **Set dependencies latest versions available** on the _GitCAD_ main menu. This will set the dependency from **v1.1** to **v1.2** so **Enclosure v1.5** has **STD CAD v1.2** and gets the update. 
-
-You can either restore the dependency of a repository to the current version or it can be updated to a later version if there is one on GitHub. 
